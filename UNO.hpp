@@ -6,7 +6,8 @@ enum class Color
 	rot,
 	gelb,
 	gruen,
-	blau
+	blau,
+	schwarz
 };
 
 enum class Action
@@ -17,11 +18,11 @@ enum class Action
 	farbeWechseln
 };
 
-class TakeTwo
+class Card
 {
 public:
-	Color rot;
-	Action zweiZiehen;
+	int number;
+	Color color;
 };
 
 
@@ -29,5 +30,6 @@ void menu();
 void changeRules();
 void showRules();
 void startGame();
+int selectPlayerAmount();
 
 #endif
