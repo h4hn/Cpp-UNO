@@ -1,1 +1,0 @@
-- Erstellen aller Karten und diese dann zum Vektor drawDeck hinzufügen
