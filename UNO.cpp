@@ -52,7 +52,7 @@ void showRules()
 		<< "\t- Der Rest kommt auf einen verdeckten Stapel in die Mitte." << std::endl
 		<< "\t- Von diesem verdeckten Stapel wird eine Karte gezogen," << std::endl 
 			<< "aufgedeckt und dann den Ablegestapel bildet." << std::endl
-		<< "\t- Daraufhin darf ein zufällig ausgewählter Spieler starten." << std::endl << std::endl
+		<< "\t- Daraufhin darf ein zufÃ¤llig ausgewÃ¤hlter Spieler starten." << std::endl << std::endl
 
 		<< "Spielen:" << std::endl
 		<< "\t- Nacheinander legt jeder Spiele pro Runde eine Karte ab." << std::endl
@@ -75,5 +75,27 @@ void showRules()
 
 void startGame()
 {
+	int numberOfPlayers = selectPlayerAmount();
+	std::cout << "Es spielen " << numberOfPlayers << " Spieler mit." << std::endl;
+}
 
+int selectPlayerAmount()
+{
+	bool correctInput = false;
+	int playerAmount;
+	while (!correctInput)
+	{
+		playerAmount = 0;
+		std::cout << "Geben Sie die Anzahl an Spielern ein: " << std::endl;
+		std::cin >> playerAmount;
+		if (playerAmount < 2 || playerAmount > 4)
+		{
+			std::cout << "Es muessen mindestens 2 und maximal 4 Spieler mitspielen." << std::endl;
+		}
+		else 
+		{
+			correctInput = true;
+		}
+	}
+	return playerAmount;
 }
