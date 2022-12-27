@@ -1,6 +1,10 @@
 #include <iostream>
+#include <vector>
+#include <iostream>
 
 #include "UNO.hpp"
+#include "CppRandom.hpp"
+
 
 int main()
 {
@@ -14,22 +18,23 @@ void menu()
 {
 	int selection;
 	std::cout << "UNO" << std::endl << std::endl
-		<< "[1]\t Spielen" << std::endl
+		<< "[1]\t Multiplayer" << std::endl
 		<< "[2]\t Spezialregeln ein-/ausschalten" << std::endl
 		<< "[3]\t Regeln anzeigen" << std::endl
-		<< "[4]\t Rangliste anzeigen" << std::endl;
+		<< "[4]\t Rangliste anzeigen" << std::endl
+		<< "[ELSE]\t Beenden" << std::endl;
 
 	std::cin >> selection;
 
 	switch (selection)
 	{
-	case 1: startGame();
+	case 1: startMultiplayer();
 		break;
 	case 2: changeRules();
 		break;
 	case 3: showRules();
 		break;
-	case 4:
+	case 4: showRanking();
 		break;
 	default:
 		return;
@@ -38,7 +43,8 @@ void menu()
 
 void changeRules()
 {
-
+	// 0-7-Regel
+	// +2 auf +2
 }
 
 void showRules()
@@ -71,9 +77,14 @@ void showRules()
 		<< "\t- Legt ein Spieler eine \"Farbwahl-Plus-4\"-Karte, gibt dieser dem naechsten Spieler die zu legende Farbe vor" << std::endl
 		<< "\t  und der naechste Spieler muss 4 Karten ziehen." << std::endl;
 
+	std::cout << std::endl << "Mit Enter zurueck zum Menue.";
+
+	std::cin.ignore();
+	std::cin.ignore();
+	menu();
 }
 
-void startGame()
+void startMultiplayer()
 {
 	int numberOfPlayers = selectPlayerAmount();
 	std::cout << "Es spielen " << numberOfPlayers << " Spieler mit." << std::endl;
@@ -98,4 +109,39 @@ int selectPlayerAmount()
 		}
 	}
 	return playerAmount;
+}
+
+void createCards(std::vector<Card*> drawDeck)
+{
+	for (int i = 0; i < 108; i++)
+	{
+		Card* card = new Card(i);
+		drawDeck.push_back(card);
+	}
+}
+
+void distributeCards(int numPlayers, std::vector<Card*> drawDeck)
+{
+	// Jeder Spieler erhält sieben zufaellige Karten aus dem drawDeck
+	for (int i = 0; i < 7; i++)
+	{
+		
+	}
+}
+
+void placeCard()
+{
+
+}
+
+
+
+
+
+
+
+
+void showRanking()
+{
+
 }
