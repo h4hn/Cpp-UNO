@@ -1,8 +1,6 @@
 #ifndef CPP_RANDOM_HPP
 #define CPP_RANDOM_HPP
 
-#include <random>
-
 //Will be used to obtain a seed for the random number engine
 std::random_device rd;
 //Standard mersenne_twister_engine seeded with rd()
