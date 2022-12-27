@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
-#include <iostream>
+#include <random>
+#include <algorithm>
 
 #include "UNO.hpp"
 #include "CppRandom.hpp"
@@ -86,8 +87,22 @@ void showRules()
 
 void startMultiplayer()
 {
+	std::vector<Card*> drawDeck;
+	std::vector<Player*> players;
+	createPlayers(players);
+	createCards(drawDeck);
+	distributeCards(drawDeck, players);
+}
+
+void createPlayers(std::vector<Player*> &players)
+{
 	int numberOfPlayers = selectPlayerAmount();
 	std::cout << "Es spielen " << numberOfPlayers << " Spieler mit." << std::endl;
+	for (int i = 0; i < numberOfPlayers; i++)
+	{
+		Player* player = new Player(i);
+		players.push_back(player);
+	}
 }
 
 int selectPlayerAmount()
@@ -111,7 +126,7 @@ int selectPlayerAmount()
 	return playerAmount;
 }
 
-void createCards(std::vector<Card*> drawDeck)
+void createCards(std::vector<Card*> &drawDeck)
 {
 	for (int i = 0; i < 108; i++)
 	{
@@ -120,12 +135,29 @@ void createCards(std::vector<Card*> drawDeck)
 	}
 }
 
-void distributeCards(int numPlayers, std::vector<Card*> drawDeck)
+void distributeCards(std::vector<Card*> &drawDeck, std::vector<Player*> &players)
 {
 	// Jeder Spieler erhält sieben zufaellige Karten aus dem drawDeck
 	for (int i = 0; i < 7; i++)
 	{
-		
+		for (Player* player : players)
+		{
+			std::random_device rd;
+			std::shuffle(std::begin(drawDeck), std::end(drawDeck), rd);
+
+			Card* drawnCard = drawDeck.front();
+			drawDeck.pop_back();
+			player->playerCards.push_back(drawnCard);
+		}
+	}
+
+	for (Player* player : players)
+	{
+		for (Card* card : player->playerCards)
+		{
+			std::cout << card->id << std::endl;
+		}
+		std::cout << std::endl;
 	}
 }
 
