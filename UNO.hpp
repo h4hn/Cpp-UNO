@@ -1,6 +1,7 @@
 #ifndef UNO_HPP
 #define UNO_HPP
 
+/*
 enum class Color 
 {
 	rot,
@@ -9,6 +10,7 @@ enum class Color
 	blau,
 	schwarz
 };
+*/
 
 enum class Action
 {
@@ -16,19 +18,13 @@ enum class Action
 	aussetzen,		// = 10
 	rotieren,		// = 11
 	zweiZiehen,		// = 12
-	vierZiehen,		// = 13
 };
 
 class Card
 {
 public:
-	int id;
 	int number;
-	Color color;
-	Card(int setID)
-	{
-		id = setID;
-	}
+	std::string color;
 
 	// Destruktor?
 };
@@ -54,5 +50,6 @@ int selectPlayerAmount();
 void showRanking();
 void createCards(std::vector<Card*>& drawDeck);
 void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players);
+void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Player*>& players);
 
 #endif
