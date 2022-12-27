@@ -38,6 +38,10 @@ class Player
 public:
 	int id;
 	std::vector<Card*> playerCards;
+	Player(int setID)
+	{
+		id = setID;
+	}
 };
 
 
@@ -45,8 +49,10 @@ void menu();
 void changeRules();
 void showRules();
 void startMultiplayer();
+void createPlayers(std::vector<Player*>& players);
 int selectPlayerAmount();
 void showRanking();
-void createCards(std::vector<Card*> deck);
+void createCards(std::vector<Card*>& drawDeck);
+void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players);
 
 #endif
