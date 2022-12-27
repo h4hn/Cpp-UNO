@@ -92,6 +92,7 @@ void startMultiplayer()
 	createPlayers(players);
 	createCards(drawDeck);
 	distributeCards(drawDeck, players);
+	multiplayerGame(drawDeck, players);
 }
 
 void createPlayers(std::vector<Player*> &players)
@@ -128,10 +129,62 @@ int selectPlayerAmount()
 
 void createCards(std::vector<Card*> &drawDeck)
 {
-	for (int i = 0; i < 108; i++)
+	// Karten instanziieren --> Es muessen folgende Karten dem Deck hinzugefuegt werden: https://de.wikipedia.org/wiki/Uno_(Kartenspiel)#/media/Datei:UNO_cards_deck.svg
+
+	// ROTE Karten
+	for (int i = 0; i < 2; i++)
 	{
-		Card* card = new Card(i);
-		drawDeck.push_back(card);
+		for (int j = i; j < 13; j++)
+		{
+			Card* card = new Card;
+			card->color = "rot";
+			card->number = j;
+			drawDeck.push_back(card);
+		}
+	}
+	// BLAUE Karten
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = i; j < 13; j++)
+		{
+			Card* card = new Card;
+			card->color = "blau";
+			card->number = j;
+			drawDeck.push_back(card);
+		}
+	}
+	// GELBE Karten
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = i; j < 13; j++)
+		{
+			Card* card = new Card;
+			card->color = "gelb";
+			card->number = j;
+			drawDeck.push_back(card);
+		}
+	}
+	// Gruene Karten
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = i; j < 13; j++)
+		{
+			Card* card = new Card;
+			card->color = "gruen";
+			card->number = j;
+			drawDeck.push_back(card);
+		}
+	}
+	// SCHWARZE Karten
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			Card* card = new Card;
+			card->color = "schwarz";
+			card->number = i;
+			drawDeck.push_back(card);
+		}
 	}
 }
 
@@ -155,19 +208,31 @@ void distributeCards(std::vector<Card*> &drawDeck, std::vector<Player*> &players
 	{
 		for (Card* card : player->playerCards)
 		{
-			std::cout << card->id << std::endl;
+			std::cout << card->color << " + " << card->number << std::endl;
 		}
 		std::cout << std::endl;
 	}
 }
 
-void placeCard()
+void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Player*>& players)
 {
+	bool finished = false;
+	while (!finished)
+	{
 
+
+
+
+
+	}
 }
 
 
 
+void placeCard()
+{
+
+}
 
 
 
