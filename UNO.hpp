@@ -15,9 +15,9 @@ enum class Color
 enum class Action
 {
 	// Diese Aktionen werden als weitere Nummern in der Karte definiert
-	aussetzen,		// = 10
-	rotieren,		// = 11
-	zweiZiehen,		// = 12
+	aussetzen,				// = 10
+	richtungswechsel,		// = 11
+	zweiZiehen,				// = 12
 };
 
 class Card
@@ -33,14 +33,13 @@ class Player
 {
 public:
 	int id;
+	std::string name;
 	std::vector<Card*> playerCards;
-	Player(int setID)
-	{
-		id = setID;
-	}
+
+	// Destruktor?
 };
 
-
+void intro();
 void menu();
 void changeRules();
 void showRules();
@@ -50,6 +49,11 @@ int selectPlayerAmount();
 void showRanking();
 void createCards(std::vector<Card*>& drawDeck);
 void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players);
-void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Player*>& players);
+void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck);
+void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players);
+void showPlaceDeck(std::vector<Card*>& placeDeck);
+void confirmNextPlayer(Player* player);
+Card* selectCard(Player* player);
+void placeCardByPlayer();
 
 #endif
