@@ -9,16 +9,47 @@
 
 int main()
 {
+	intro();
+
 	menu();
 
-
 	return 0;
+}
+
+void intro()
+{
+	std::cout 
+		<< "##############################################################################################" << std::endl
+		<< "#                                                                                            #" << std::endl
+		<< "#  ######                 ######  ##########          ######         ###############         #" << std::endl
+		<< "#  ######                 ######  ###########         ######      #####################      #" << std::endl
+		<< "#  ######                 ######  ############        ######    #########################    #" << std::endl
+		<< "#  ######                 ######  ###### ######       ######   #######             #######   #" << std::endl
+		<< "#  ######                 ######  ######  ######      ######  #######               #######  #" << std::endl
+		<< "#  ######                 ######  ######   ######     ######  ######                 ######  #" << std::endl
+		<< "#  ######                 ######  ######    ######    ######  ######                 ######  #" << std::endl
+		<< "#  ######                 ######  ######     ######   ######  ######                 ######  #" << std::endl
+		<< "#  ######                 ######  ######      ######  ######  ######                 ######  #" << std::endl
+		<< "#  ######                 ######  ######       ###### ######  ######                 ######  #" << std::endl
+		<< "#  ######                 ######  ######        ############  ######                 ######  #" << std::endl
+		<< "#  #######               #######  ######         ###########  #######               #######  #" << std::endl
+		<< "#   #######             #######   ######          ##########   #######             #######   #" << std::endl
+		<< "#    #########################    ######           #########    #########################    #" << std::endl
+		<< "#      #####################      ######            ########      #####################      #" << std::endl
+		<< "#         ###############         ######             #######         ###############         #" << std::endl
+		<< "#                                                                                            #" << std::endl
+		<< "##############################################################################################" << std::endl
+		<< "#                                                                                            #" << std::endl
+		<< "#                         Tobias Hahn | Fabian Eilber | Fabian Unger                         #" << std::endl
+		<< "#                                                                                            #" << std::endl
+		<< "##############################################################################################" << std::endl;
+	std::cout << std::endl << std::endl;
 }
 
 void menu()
 {
 	int selection;
-	std::cout << "UNO" << std::endl << std::endl
+	std::cout 
 		<< "[1]\t Multiplayer" << std::endl
 		<< "[2]\t Spezialregeln ein-/ausschalten" << std::endl
 		<< "[3]\t Regeln anzeigen" << std::endl
@@ -88,20 +119,26 @@ void showRules()
 void startMultiplayer()
 {
 	std::vector<Card*> drawDeck;
+	std::vector<Card*> placeDeck;
 	std::vector<Player*> players;
 	createPlayers(players);
 	createCards(drawDeck);
 	distributeCards(drawDeck, players);
-	multiplayerGame(drawDeck, players);
+	placeStartCard(drawDeck, placeDeck);
+	multiplayerGame(drawDeck, placeDeck, players);
 }
 
 void createPlayers(std::vector<Player*> &players)
 {
 	int numberOfPlayers = selectPlayerAmount();
 	std::cout << "Es spielen " << numberOfPlayers << " Spieler mit." << std::endl;
-	for (int i = 0; i < numberOfPlayers; i++)
+	for (int i = 1; i < numberOfPlayers + 1; i++)
 	{
-		Player* player = new Player(i);
+		std::string name = "Spieler" + (char)i;
+		Player* player = new Player;
+		std::cout << "Gebe den Namen fuer Spieler " << i << " ein: ";
+		std::cin >> name;
+		player->name = name;
 		players.push_back(player);
 	}
 }
@@ -113,7 +150,7 @@ int selectPlayerAmount()
 	while (!correctInput)
 	{
 		playerAmount = 0;
-		std::cout << "Geben Sie die Anzahl an Spielern ein: " << std::endl;
+		std::cout << "Gebe die Anzahl an Spielern ein: " << std::endl;
 		std::cin >> playerAmount;
 		if (playerAmount < 2 || playerAmount > 4)
 		{
@@ -182,7 +219,7 @@ void createCards(std::vector<Card*> &drawDeck)
 		{
 			Card* card = new Card;
 			card->color = "schwarz";
-			card->number = i;
+			card->number = i;				// Wenn schwarz Nummer 1 hat --> +4 Karte
 			drawDeck.push_back(card);
 		}
 	}
@@ -190,20 +227,21 @@ void createCards(std::vector<Card*> &drawDeck)
 
 void distributeCards(std::vector<Card*> &drawDeck, std::vector<Player*> &players)
 {
+	std::random_device rd;
+	std::shuffle(std::begin(drawDeck), std::end(drawDeck), rd);
 	// Jeder Spieler erhält sieben zufaellige Karten aus dem drawDeck
 	for (int i = 0; i < 7; i++)
 	{
 		for (Player* player : players)
 		{
-			std::random_device rd;
-			std::shuffle(std::begin(drawDeck), std::end(drawDeck), rd);
-
 			Card* drawnCard = drawDeck.front();
-			drawDeck.pop_back();
+			drawDeck.erase(drawDeck.begin());
 			player->playerCards.push_back(drawnCard);
 		}
 	}
 
+	/*
+	// Alle Karten der jeweiligen Spieler zeigen
 	for (Player* player : players)
 	{
 		for (Card* card : player->playerCards)
@@ -212,26 +250,275 @@ void distributeCards(std::vector<Card*> &drawDeck, std::vector<Player*> &players
 		}
 		std::cout << std::endl;
 	}
+	*/
 }
 
-void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Player*>& players)
+std::string getCardInfo(Card* card)
+{
+	std::string cardInfo;
+
+	if (card->color == "rot")
+	{
+		switch (card->number)
+		{
+		case 0: cardInfo = "Rote 0";
+			break;
+		case 1: cardInfo = "Rote 1";
+			break;
+		case 2: cardInfo = "Rote 2";
+			break;
+		case 3: cardInfo = "Rote 3";
+			break;
+		case 4: cardInfo = "Rote 4";
+			break;
+		case 5: cardInfo = "Rote 5";
+			break;
+		case 6: cardInfo = "Rote 6";
+			break;
+		case 7: cardInfo = "Rote 7";
+			break;
+		case 8: cardInfo = "Rote 8";
+			break;
+		case 9: cardInfo = "Rote 9";
+			break;
+		case 10: cardInfo = "Rote \"Aussetzen\"-Karte";
+			break;
+		case 11: cardInfo = "Rote \"Richtungswechsel\"-Karte";
+			break;
+		case 12: cardInfo = "Rote \"Zwei Ziehen\"-Karte";
+			break;
+		default: cardInfo = "Karte nicht verfuegbar.";
+			break;
+		}
+	}
+	else if (card->color == "blau")
+	{
+		switch (card->number)
+		{
+		case 0: cardInfo = "Blaue 0";
+			break;
+		case 1: cardInfo = "Blaue 1";
+			break;
+		case 2: cardInfo = "Blaue 2";
+			break;
+		case 3: cardInfo = "Blaue 3";
+			break;
+		case 4: cardInfo = "Blaue 4";
+			break;
+		case 5: cardInfo = "Blaue 5";
+			break;
+		case 6: cardInfo = "Blaue 6";
+			break;
+		case 7: cardInfo = "Blaue 7";
+			break;
+		case 8: cardInfo = "Blaue 8";
+			break;
+		case 9: cardInfo = "Blaue 9";
+			break;
+		case 10: cardInfo = "Blaue \"Aussetzen\"-Karte";
+			break;
+		case 11: cardInfo = "Blaue \"Richtungswechsel\"-Karte";
+			break;
+		case 12: cardInfo = "Blaue \"Zwei Ziehen\"-Karte";
+			break;
+		default: cardInfo = "Karte nicht verfuegbar.";
+			break;
+		}
+	}
+	else if (card->color == "gruen")
+	{
+		switch (card->number)
+		{
+		case 0: cardInfo = "Gruene 0";
+			break;
+		case 1: cardInfo = "Gruene 1";
+			break;
+		case 2: cardInfo = "Gruene 2";
+			break;
+		case 3: cardInfo = "Gruene 3";
+			break;
+		case 4: cardInfo = "Gruene 4";
+			break;
+		case 5: cardInfo = "Gruene 5";
+			break;
+		case 6: cardInfo = "Gruene 6";
+			break;
+		case 7: cardInfo = "Gruene 7";
+			break;
+		case 8: cardInfo = "Gruene 8";
+			break;
+		case 9: cardInfo = "Gruene 9";
+			break;
+		case 10: cardInfo = "Gruene \"Aussetzen\"-Karte";
+			break;
+		case 11: cardInfo = "Gruene \"Richtungswechsel\"-Karte";
+			break;
+		case 12: cardInfo = "Gruene \"Zwei Ziehen\"-Karte";
+			break;
+		default: cardInfo = "Karte nicht verfuegbar.";
+			break;
+		}
+	}
+	else if (card->color == "gelb")
+	{
+		switch (card->number)
+		{
+		case 0: cardInfo = "Gelbe 0";
+			break;
+		case 1: cardInfo = "Gelbe 1";
+			break;
+		case 2: cardInfo = "Gelbe 2";
+			break;
+		case 3: cardInfo = "Gelbe 3";
+			break;
+		case 4: cardInfo = "Gelbe 4";
+			break;
+		case 5: cardInfo = "Gelbe 5";
+			break;
+		case 6: cardInfo = "Gelbe 6";
+			break;
+		case 7: cardInfo = "Gelbe 7";
+			break;
+		case 8: cardInfo = "Gelbe 8";
+			break;
+		case 9: cardInfo = "Gelbe 9";
+			break;
+		case 10: cardInfo = "Gelbe \"Aussetzen\"- Karte";
+			break;
+		case 11: cardInfo = "Gelbe \"Richtungswechsel\"-Karte";
+			break;
+		case 12: cardInfo = "Gelbe \"Zwei Ziehen\"-Karte";
+			break;
+		default: cardInfo = "Karte nicht verfuegbar.";
+			break;
+		}
+	}
+	else if (card->color == "schwarz")
+	{
+		switch (card->number)
+		{
+		case 0: cardInfo = "\"Farbwechsel\"-Karte";
+			break;
+		case 1: cardInfo = "\"Farbwechsel + 4\"-Karte";
+			break;
+		default: cardInfo = "Karte nicht verfuegbar.";
+			break;
+		}
+	}
+
+	return cardInfo;
+}
+
+void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck)
+{
+	Card* startCard = drawDeck.front();
+	drawDeck.erase(drawDeck.begin());
+	placeDeck.push_back(startCard);
+}
+
+void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players)
 {
 	bool finished = false;
+
+	int startPlayerID = GetRandomNumberBetween(0, players.size() - 1);
+	int currentPlayerID = startPlayerID;
+
 	while (!finished)
 	{
+		Player* currentPlayer = players[currentPlayerID];
+		confirmNextPlayer(currentPlayer);
+		showPlaceDeck(placeDeck);
+		Card* selectedCard = selectCard(currentPlayer);
 
+		//placeCardByPlayer();
 
-
-
-
+		if (currentPlayerID < players.size() - 1)
+		{
+			currentPlayerID++;
+		}
+		else if (currentPlayerID == players.size() - 1)
+		{
+			currentPlayerID = 0;
+		}
 	}
 }
 
-
-
-void placeCard()
+void confirmNextPlayer(Player* player)
 {
+	// Erst zum naechsten Spieler wechseln, wenn er bereit ist, damit niemand anderes seine Karten sieht
+	bool correctInput = false;
 
+	while (!correctInput)
+	{
+		std::string confirmPlayer;
+
+		std::cout << "Der naechste Spieler ist " << player->name << std::endl
+			<< "Bitte mit [y] bestaetigen, dass gewechselt werden kann." << std::endl;
+		std::cin >> confirmPlayer;
+
+		if (confirmPlayer == "y")
+		{
+			correctInput = true;
+		}
+		else
+		{
+			std::cout << "Bitte gebe nur [y] ein, wenn du bereit bist." << std::endl;
+		}
+	}
+}
+
+void showPlaceDeck(std::vector<Card*>& placeDeck)
+{
+	std::string shownCard = getCardInfo(placeDeck.front());
+
+	std::cout << "Die aktuell oberste Karte auf dem Legestapel ist: " << shownCard << std::endl;
+}
+
+Card* selectCard(Player* player)
+{
+	std::vector<Player*> ranking;
+	std::cout << "Bitte waehle die Karte, die gelegt werden soll." << std::endl;
+	bool correctInput = false;
+	int selection;
+	while (!correctInput)
+	{
+		int index = 0;
+		for (Card* card : player->playerCards)
+		{
+			std::string cardInfo = getCardInfo(card);
+			std::cout << "[" << index + 1 << "]\t" << cardInfo << std::endl;
+			index++;
+		}
+		std::cin >> selection;
+
+		if (selection < 1 || selection > player->playerCards.size())
+		{
+			std::cout << "Bitte gebe eine gueltige Zahl ein." << std::endl;
+			continue;
+		}
+
+
+		selection--;
+
+		std::cout << "Ausgewaehlte Karte: " << player->playerCards[selection]->color << " + " << player->playerCards[selection]->number << std::endl;
+
+		// Ueberpruefen, ob Karte gelegt werden darf.
+		//checkCard();
+
+		
+
+
+		correctInput = true;
+	}
+	return player->playerCards[selection];
+}
+
+void placeCardByPlayer()
+{
+	/*
+	* Karte von Spieler auf placeDeck legen
+	* Andere Karte(n) von placeDeck direkt zurueck auf drawDeck legen und diesen dann auch direkt mischeln
+	*/
 }
 
 
