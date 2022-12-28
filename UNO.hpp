@@ -53,7 +53,9 @@ void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck)
 void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players);
 void showPlaceDeck(std::vector<Card*>& placeDeck);
 void confirmNextPlayer(Player* player);
-Card* selectCard(Player* player);
-void placeCardByPlayer();
+Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player);
+void drawCard(std::vector<Card*>& drawDeck, Player* player);
+bool checkCard(Card* firstCard, Card* secCard);
+void placeCardByPlayer(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Card* card);
 
 #endif
