@@ -427,10 +427,9 @@ void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck
 	{
 		Player* currentPlayer = players[currentPlayerID];
 		confirmNextPlayer(currentPlayer);
-		showPlaceDeck(placeDeck);
-		Card* selectedCard = selectCard(currentPlayer);
-
-		//placeCardByPlayer();
+		Card* selectedCard = selectCard(drawDeck, placeDeck, currentPlayer);
+		
+		placeCardByPlayer(drawDeck, placeDeck, selectedCard);
 
 		if (currentPlayerID < players.size() - 1)
 		{
@@ -474,14 +473,20 @@ void showPlaceDeck(std::vector<Card*>& placeDeck)
 	std::cout << "Die aktuell oberste Karte auf dem Legestapel ist: " << shownCard << std::endl;
 }
 
-Card* selectCard(Player* player)
+Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player)
 {
 	std::vector<Player*> ranking;
-	std::cout << "Bitte waehle die Karte, die gelegt werden soll." << std::endl;
+	Card* placeDeckCard = placeDeck.front();
+	Card* selectedCard;
 	bool correctInput = false;
+	bool cardDrawn = false;
 	int selection;
 	while (!correctInput)
 	{
+		system("cls");
+
+		showPlaceDeck(placeDeck);
+		std::cout << "Bitte waehle die Karte, die gelegt werden soll." << std::endl;
 		int index = 0;
 		for (Card* card : player->playerCards)
 		{
@@ -489,41 +494,110 @@ Card* selectCard(Player* player)
 			std::cout << "[" << index + 1 << "]\t" << cardInfo << std::endl;
 			index++;
 		}
-		std::cin >> selection;
 
-		if (selection < 1 || selection > player->playerCards.size())
+		if (!cardDrawn)
 		{
-			std::cout << "Bitte gebe eine gueltige Zahl ein." << std::endl;
-			continue;
+			std::cout << "[" << index + 1 << "]\tKarte ziehen" << std::endl;
+			std::cin >> selection;
+			if (selection < 1 || selection > player->playerCards.size() + 1)
+			{
+				std::cout << "Bitte gebe eine gueltige Zahl ein." << std::endl;
+				continue;
+			}
+		}
+		else
+		{
+			std::cin >> selection;
+			if (selection < 1 || selection > player->playerCards.size())
+			{
+				std::cout << "Bitte gebe eine gueltige Zahl ein." << std::endl;
+				continue;
+			}
 		}
 
 
-		selection--;
+		if (selection == player->playerCards.size() + 1 && !cardDrawn)
+		{
+			// Karte ziehen
+			drawCard(drawDeck, player);
+			cardDrawn = true;
+			continue;
+		}
+		else
+		{
+			// Karte legen
+			selection--;
 
-		std::cout << "Ausgewaehlte Karte: " << player->playerCards[selection]->color << " + " << player->playerCards[selection]->number << std::endl;
+			std::cout << "Ausgewaehlte Karte: " << player->playerCards[selection]->color << " + " << player->playerCards[selection]->number << std::endl;
 
-		// Ueberpruefen, ob Karte gelegt werden darf.
-		//checkCard();
+			selectedCard = player->playerCards[selection];
 
-		
+			// Ueberpruefen, ob Karte gelegt werden darf.
+			correctInput = checkCard(placeDeckCard, selectedCard);
 
-
-		correctInput = true;
+			if (!correctInput)
+			{
+				std::cout << "Diese Karte kann nicht auf die Karte, die auf dem Ablegestapel liegt, abgelegt werden." << std::endl;
+			}
+			else
+			{
+				player->playerCards.erase(player->playerCards.begin() + selection);
+				return selectedCard;
+			}
+		}
 	}
-	return player->playerCards[selection];
 }
 
-void placeCardByPlayer()
+void drawCard(std::vector<Card*>& drawDeck, Player* player)
+{
+	// Karte ziehen
+	Card* card = drawDeck.front();
+	drawDeck.erase(drawDeck.begin());
+	player->playerCards.push_back(card);
+}
+
+bool checkCard(Card* firstCard, Card* secCard)
+{
+	std::string firstColor = firstCard->color;
+	int firstNumber = firstCard->number;
+
+	std::string secColor = secCard->color;
+	int secNumber = secCard->number;
+
+	if (secColor == "schwarz" && firstColor != "schwarz")
+	{
+		return true;
+	}
+	else if (secColor == firstColor)
+	{
+		return true;
+	}
+	else if (secNumber == firstNumber)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void placeCardByPlayer(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Card* card)
 {
 	/*
 	* Karte von Spieler auf placeDeck legen
 	* Andere Karte(n) von placeDeck direkt zurueck auf drawDeck legen und diesen dann auch direkt mischeln
 	*/
+	Card* old_card = placeDeck.front();
+	placeDeck.erase(placeDeck.begin());
+	placeDeck.push_back(card);
+	drawDeck.push_back(old_card);
 }
 
+void executeAction()
+{
 
-
-
+}
 
 void showRanking()
 {
