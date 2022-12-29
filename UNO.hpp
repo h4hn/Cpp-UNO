@@ -48,6 +48,7 @@ void createPlayers(std::vector<Player*>& players);
 int selectPlayerAmount();
 void showRanking();
 void createCards(std::vector<Card*>& drawDeck);
+void shuffleDeck(std::vector<Card*>& deck);
 void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players);
 void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck);
 void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players);
@@ -57,5 +58,6 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
 void drawCard(std::vector<Card*>& drawDeck, Player* player);
 bool checkCard(Card* firstCard, Card* secCard);
 void placeCardByPlayer(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Card* card);
+void executeAction(Card* card, bool& reverse, bool& skip, int& plustwo, bool& plusfour);
 
 #endif
