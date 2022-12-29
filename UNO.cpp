@@ -121,6 +121,7 @@ void startMultiplayer()
 	std::vector<Card*> drawDeck;
 	std::vector<Card*> placeDeck;
 	std::vector<Player*> players;
+
 	createPlayers(players);
 	createCards(drawDeck);
 	distributeCards(drawDeck, players);
@@ -225,10 +226,15 @@ void createCards(std::vector<Card*> &drawDeck)
 	}
 }
 
-void distributeCards(std::vector<Card*> &drawDeck, std::vector<Player*> &players)
+void shuffleDeck(std::vector<Card*>& deck)
 {
 	std::random_device rd;
-	std::shuffle(std::begin(drawDeck), std::end(drawDeck), rd);
+	std::shuffle(std::begin(deck), std::end(deck), rd);
+}
+
+void distributeCards(std::vector<Card*> &drawDeck, std::vector<Player*> &players)
+{
+	shuffleDeck(drawDeck);
 	// Jeder Spieler erhält sieben zufaellige Karten aus dem drawDeck
 	for (int i = 0; i < 7; i++)
 	{
@@ -419,26 +425,72 @@ void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck)
 void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players)
 {
 	bool finished = false;
-
 	int startPlayerID = GetRandomNumberBetween(0, players.size() - 1);
 	int currentPlayerID = startPlayerID;
+
+	bool skip = false;			// number == 10
+	bool reverse = false;		// number == 11
+	int plustwo = 0;			// number == 12
+	bool plusfour = false;		// color == black && number == 1
+
 
 	while (!finished)
 	{
 		Player* currentPlayer = players[currentPlayerID];
-		confirmNextPlayer(currentPlayer);
-		Card* selectedCard = selectCard(drawDeck, placeDeck, currentPlayer);
-		
-		placeCardByPlayer(drawDeck, placeDeck, selectedCard);
+		if (skip)
+		{
+			std::cout << currentPlayer->name << " muss diese Runde aussetzen." << std::endl;
+		}
+		else
+		{
+			if (plustwo > 0)
+			{
+				/*
+				* Ueberpruefen, ob Spieler eine +2-Karte hat
+				* - Wenn ja, fragen, ob er diese legen moechte oder direkt zwei Karten ziehen moechte
+				* - Wenn nein, muss er zwei Karten ziehen
+				*/
+			}
+			else if (plusfour)
+			{
+				/*
+				* Spieler muss 4 Karten ziehen und darf keine Karte legen
+				*/
+			}
+			else
+			{
+				/*
+				* Spieler, die Karten ziehen mussten, duerfen nicht direkt wieder eine Karte legen.
+				*/
+				confirmNextPlayer(currentPlayer);
+				Card* selectedCard = selectCard(drawDeck, placeDeck, currentPlayer);
+				if (selectedCard != NULL)
+				{
+					placeCardByPlayer(drawDeck, placeDeck, selectedCard);
+					executeAction(selectedCard, reverse, skip, plustwo, plusfour);
+				}
+			}
+		}
 
-		if (currentPlayerID < players.size() - 1)
+		if (currentPlayerID < players.size() - 1 && !reverse)
 		{
 			currentPlayerID++;
 		}
-		else if (currentPlayerID == players.size() - 1)
+		else if (currentPlayerID == players.size() - 1 && !reverse)
 		{
 			currentPlayerID = 0;
 		}
+		else if (currentPlayerID > 0 && reverse)
+		{
+			currentPlayerID--;
+		}
+		else if (currentPlayerID == 0 && reverse)
+		{
+			currentPlayerID = players.size() - 1;
+		}
+
+		skip = false;
+		plusfour = false;
 	}
 }
 
@@ -556,23 +608,23 @@ void drawCard(std::vector<Card*>& drawDeck, Player* player)
 	player->playerCards.push_back(card);
 }
 
-bool checkCard(Card* firstCard, Card* secCard)
+bool checkCard(Card* stackCard, Card* playerCard)
 {
-	std::string firstColor = firstCard->color;
-	int firstNumber = firstCard->number;
+	std::string stackColor = stackCard->color;
+	int stackNumber = stackCard->number;
 
-	std::string secColor = secCard->color;
-	int secNumber = secCard->number;
+	std::string playerColor = playerCard->color;
+	int playerNumber = playerCard->number;
 
-	if (secColor == "schwarz" && firstColor != "schwarz")
+	if (playerColor == "schwarz" && stackColor != "schwarz")
 	{
 		return true;
 	}
-	else if (secColor == firstColor)
+	else if (playerColor == stackColor)
 	{
 		return true;
 	}
-	else if (secNumber == firstNumber)
+	else if (playerNumber == stackNumber)
 	{
 		return true;
 	}
@@ -592,11 +644,40 @@ void placeCardByPlayer(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDe
 	placeDeck.erase(placeDeck.begin());
 	placeDeck.push_back(card);
 	drawDeck.push_back(old_card);
+	shuffleDeck(drawDeck);
 }
 
-void executeAction()
+void executeAction(Card* card, bool &reverse, bool &skip, int &plustwo, bool &plusfour)
 {
+	int number = card->number;
+	std::string color = card->color;
 
+	if (color != "schwarz")
+	{
+		switch (number)
+		{
+		case 10: skip = true;
+			break;
+		case 11: 
+			if (!reverse)
+			{
+				reverse = true;
+			}
+			else
+			{
+				reverse = false;
+			}
+			break;
+		case 12: plustwo += 2;
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+
+	}
 }
 
 void showRanking()
