@@ -424,22 +424,31 @@ void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck)
 
 void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players)
 {
+	system("cls");
+
 	bool finished = false;
 	int startPlayerID = GetRandomNumberBetween(0, players.size() - 1);
 	int currentPlayerID = startPlayerID;
 
+	// Aktionskarten - Parameter
 	bool skip = false;			// number == 10
 	bool reverse = false;		// number == 11
 	int plustwo = 0;			// number == 12
 	bool plusfour = false;		// color == black && number == 1
+	std::string wishedColor;	// color == black
+	// -------------------------
 
+	Player* currentPlayer = players[currentPlayerID];
 
 	while (!finished)
 	{
-		Player* currentPlayer = players[currentPlayerID];
+		
+
 		if (skip)
 		{
-			std::cout << currentPlayer->name << " muss diese Runde aussetzen." << std::endl;
+			std::cout << "Aktueller Spieler: " << currentPlayer->name << std::endl;
+			std::cout << "Du musst diese Runde aussetzen." << std::endl;
+			skip = false;
 		}
 		else
 		{
@@ -448,26 +457,87 @@ void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck
 				/*
 				* Ueberpruefen, ob Spieler eine +2-Karte hat
 				* - Wenn ja, fragen, ob er diese legen moechte oder direkt zwei Karten ziehen moechte
-				* - Wenn nein, muss er zwei Karten ziehen
+				* - Wenn nein, muss er Karten ziehen
 				*/
+				bool hasPlusTwo = false;
+				Card* plusTwoCard = new Card;
+				for (Card* card : currentPlayer->playerCards)
+				{
+					if (card->number == 12)
+					{
+						hasPlusTwo = true;
+						plusTwoCard = card;
+					}
+				}
+				if (hasPlusTwo)
+				{
+					bool correctInput = false;
+					char choice;
+					while (!correctInput)
+					{
+						std::cout << "Aktueller Spieler: " << currentPlayer->name << std::endl;
+						std::cout << "Moechtest du deine \"+2\"-Karte legen?" << std::endl
+							<< "Wenn nein, musst du " << plustwo << " Karten ziehen. [y|n]" << std::endl;
+						std::cin >> choice;
+						if (choice == 'y' || choice == 'n')
+						{
+							correctInput = true;
+						}
+						else
+						{
+							std::cout << "Bitte geben Sie y oder n ein." << std::endl;
+							system("cls");
+						}
+					}
+					if (choice == 'y')
+					{
+						placeCardByPlayer(drawDeck, placeDeck, plusTwoCard);
+						plustwo += 2;
+					}
+					else if (choice == 'n')
+					{
+						for (int i = 0; i < plustwo; i++)
+						{
+							drawCard(drawDeck, currentPlayer);
+						}
+						plustwo = 0;
+					}
+				}
+				else
+				{
+					std::cout << "Aktueller Spieler: " << currentPlayer->name << std::endl;
+					std::cout << "Du musst " << plustwo << " Karten ziehen." << std::endl;
+					for (int i = 0; i < plustwo; i++)
+					{
+						drawCard(drawDeck, currentPlayer);
+					}
+					plustwo = 0;
+				}
 			}
 			else if (plusfour)
 			{
 				/*
 				* Spieler muss 4 Karten ziehen und darf keine Karte legen
 				*/
+				std::cout << "Aktueller Spieler: " << currentPlayer->name << std::endl;
+				std::cout << "Du musst 4 Karten ziehen." << std::endl;
+				for (int i = 0; i < 4; i++)
+				{
+					drawCard(drawDeck, currentPlayer);
+				}
+				plusfour = false;
 			}
 			else
 			{
 				/*
 				* Spieler, die Karten ziehen mussten, duerfen nicht direkt wieder eine Karte legen.
 				*/
-				confirmNextPlayer(currentPlayer);
+				std::cout << "Aktueller Spieler: " << currentPlayer->name << std::endl;
 				Card* selectedCard = selectCard(drawDeck, placeDeck, currentPlayer);
 				if (selectedCard != NULL)
-				{
+				{					
 					placeCardByPlayer(drawDeck, placeDeck, selectedCard);
-					executeAction(selectedCard, reverse, skip, plustwo, plusfour);
+					executeAction(selectedCard, reverse, skip, plustwo, plusfour, wishedColor);
 				}
 			}
 		}
@@ -489,8 +559,9 @@ void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck
 			currentPlayerID = players.size() - 1;
 		}
 
-		skip = false;
-		plusfour = false;
+		currentPlayer = players[currentPlayerID];
+		confirmNextPlayer(currentPlayer);
+		system("cls");
 	}
 }
 
@@ -535,8 +606,6 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
 	int selection;
 	while (!correctInput)
 	{
-		system("cls");
-
 		showPlaceDeck(placeDeck);
 		std::cout << "Bitte waehle die Karte, die gelegt werden soll." << std::endl;
 		int index = 0;
@@ -554,6 +623,7 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
 			if (selection < 1 || selection > player->playerCards.size() + 1)
 			{
 				std::cout << "Bitte gebe eine gueltige Zahl ein." << std::endl;
+				system("cls");
 				continue;
 			}
 		}
@@ -563,6 +633,7 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
 			if (selection < 1 || selection > player->playerCards.size())
 			{
 				std::cout << "Bitte gebe eine gueltige Zahl ein." << std::endl;
+				system("cls");
 				continue;
 			}
 		}
@@ -573,6 +644,7 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
 			// Karte ziehen
 			drawCard(drawDeck, player);
 			cardDrawn = true;
+			system("cls");
 			continue;
 		}
 		else
@@ -589,12 +661,15 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
 
 			if (!correctInput)
 			{
+				system("cls");
 				std::cout << "Diese Karte kann nicht auf die Karte, die auf dem Ablegestapel liegt, abgelegt werden." << std::endl;
+				std::cout << "Aktueller Spieler: " << player->name << std::endl;
 			}
 			else
 			{
 				player->playerCards.erase(player->playerCards.begin() + selection);
 				return selectedCard;
+				system("cls");
 			}
 		}
 	}
@@ -620,7 +695,7 @@ bool checkCard(Card* stackCard, Card* playerCard)
 	{
 		return true;
 	}
-	else if (playerColor == stackColor)
+	else if (playerColor == stackColor && playerColor != "schwarz")
 	{
 		return true;
 	}
@@ -647,7 +722,7 @@ void placeCardByPlayer(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDe
 	shuffleDeck(drawDeck);
 }
 
-void executeAction(Card* card, bool &reverse, bool &skip, int &plustwo, bool &plusfour)
+void executeAction(Card* card, bool &reverse, bool &skip, int &plustwo, bool &plusfour, std::string &wishedColor)
 {
 	int number = card->number;
 	std::string color = card->color;
@@ -676,7 +751,53 @@ void executeAction(Card* card, bool &reverse, bool &skip, int &plustwo, bool &pl
 	}
 	else
 	{
+		switch (number)
+		{
+		case 0: wishColor(wishedColor);
+			break;
+		case 1: wishColor(wishedColor);
+			plusfour = true;
+			break;
+		default:
+			break;
+		}
+	}
+}
 
+void wishColor(std::string &newColor)
+{
+	char selection;
+	bool correctInput = false;
+	while (!correctInput)
+	{
+		std::cout << "Bitte waehle die Farbe, die du dir wuenschst." << std::endl
+			<< "[1]\tRot" << std::endl
+			<< "[2]\tGruen" << std::endl
+			<< "[3]\tBlau" << std::endl
+			<< "[4]\tGelb" << std::endl;
+		std::cin >> selection;
+		if (selection == '1' || selection == '2' || selection == '3' || selection == '4')
+		{
+			correctInput = true;
+		}
+		else
+		{
+			std::cout << "Bitte geben Sie eine gueltige Eingabe ein." << std::endl;
+			system("cls");
+		}
+	}
+	switch (selection)
+	{
+	case '1': newColor = "rot";
+		break;
+	case '2': newColor = "gruen";
+		break;
+	case '3': newColor = "blau";
+		break;
+	case '4': newColor = "gelb";
+		break;
+	default:
+		break;
 	}
 }
 
