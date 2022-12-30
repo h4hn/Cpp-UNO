@@ -50,23 +50,26 @@ void menu()
 {
 	int selection;
 	std::cout 
-		<< "[1]\t Multiplayer" << std::endl
-		<< "[2]\t Spezialregeln ein-/ausschalten" << std::endl
-		<< "[3]\t Regeln anzeigen" << std::endl
-		<< "[4]\t Rangliste anzeigen" << std::endl
+		<< "[1]\t Singleplayer" << std::endl
+		<< "[2]\t Multiplayer" << std::endl
+		<< "[3]\t Spezialregeln ein-/ausschalten" << std::endl
+		<< "[4]\t Regeln anzeigen" << std::endl
+		<< "[5]\t Rangliste anzeigen" << std::endl
 		<< "[ELSE]\t Beenden" << std::endl;
 
 	std::cin >> selection;
 
 	switch (selection)
 	{
-	case 1: startMultiplayer();
+	case 1:
 		break;
-	case 2: changeRules();
+	case 2: startMultiplayer();
 		break;
-	case 3: showRules();
+	case 3: changeRules();
 		break;
-	case 4: showRanking();
+	case 4: showRules();
+		break;
+	case 5: showRanking();
 		break;
 	default:
 		return;
@@ -573,7 +576,6 @@ void confirmNextPlayer(Player* player)
 	while (!correctInput)
 	{
 		std::string confirmPlayer;
-
 		std::cout << "Der naechste Spieler ist " << player->name << std::endl
 			<< "Bitte mit [y] bestaetigen, dass gewechselt werden kann." << std::endl;
 		std::cin >> confirmPlayer;
@@ -623,17 +625,16 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
 			if (selection < 1 || selection > player->playerCards.size() + 1)
 			{
 				std::cout << "Bitte gebe eine gueltige Zahl ein." << std::endl;
-				system("cls");
 				continue;
 			}
 		}
 		else
 		{
+			std::cout << "[" << index + 1 << "]\tKeine Karte legen" << std::endl;
 			std::cin >> selection;
-			if (selection < 1 || selection > player->playerCards.size())
+			if (selection < 1 || selection > player->playerCards.size() + 1)
 			{
 				std::cout << "Bitte gebe eine gueltige Zahl ein." << std::endl;
-				system("cls");
 				continue;
 			}
 		}
@@ -646,6 +647,11 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
 			cardDrawn = true;
 			system("cls");
 			continue;
+		}
+		else if (selection == player->playerCards.size() + 1 && cardDrawn)
+		{
+			system("cls");
+			return NULL;
 		}
 		else
 		{
@@ -668,8 +674,8 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
 			else
 			{
 				player->playerCards.erase(player->playerCards.begin() + selection);
-				return selectedCard;
 				system("cls");
+				return selectedCard;
 			}
 		}
 	}
