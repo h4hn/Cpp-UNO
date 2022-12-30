@@ -58,6 +58,7 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
 void drawCard(std::vector<Card*>& drawDeck, Player* player);
 bool checkCard(Card* firstCard, Card* secCard);
 void placeCardByPlayer(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Card* card);
-void executeAction(Card* card, bool& reverse, bool& skip, int& plustwo, bool& plusfour);
+void executeAction(Card* card, bool& reverse, bool& skip, int& plustwo, bool& plusfour, std::string& wishedColor);
+void wishColor(std::string& newColor);
 
 #endif
