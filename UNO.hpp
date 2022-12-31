@@ -52,13 +52,14 @@ void shuffleDeck(std::vector<Card*>& deck);
 void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players);
 void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck);
 void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players);
-void showPlaceDeck(std::vector<Card*>& placeDeck);
+void showPlaceDeck(std::vector<Card*>& placeDeck, std::string wishedColor);
 void confirmNextPlayer(Player* player);
-Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player);
+Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player, std::string wishedColor);
 void drawCard(std::vector<Card*>& drawDeck, Player* player);
-bool checkCard(Card* firstCard, Card* secCard);
+bool checkCard(Card* stackCard, Card* playerCard, std::string& wishedColor);
 void placeCardByPlayer(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Card* card);
 void executeAction(Card* card, bool& reverse, bool& skip, int& plustwo, bool& plusfour, std::string& wishedColor);
 void wishColor(std::string& newColor);
+void backToMenu();
 
 #endif
