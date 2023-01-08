@@ -428,8 +428,20 @@ std::string getCardInfo(Card* card)
 
 void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck)
 {
-	Card* startCard = drawDeck.front();
-	drawDeck.erase(drawDeck.begin());
+	bool isActionCard = false;
+	Card* startCard = new Card;
+
+	do {
+		isActionCard = false;
+		startCard = drawDeck.front();
+		drawDeck.erase(drawDeck.begin());
+		if (startCard->color == "schwarz" || startCard->number >= 10 && startCard->number <= 12)
+		{
+			isActionCard = true;
+			drawDeck.push_back(startCard);
+		}
+	} while (isActionCard);
+
 	placeDeck.push_back(startCard);
 }
 
