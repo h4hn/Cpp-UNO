@@ -2,7 +2,7 @@
 #define UNO_HPP
 
 /*
-enum class Color 
+enum class Color
 {
 	rot,
 	gelb,
@@ -33,6 +33,7 @@ class Player
 {
 public:
 	int id;
+	bool bot;
 	std::string name;
 	std::vector<Card*> playerCards;
 
@@ -43,23 +44,26 @@ void intro();
 void menu();
 void changeRules();
 void showRules();
+void startSingleplayer();
 void startMultiplayer();
-void createPlayers(std::vector<Player*>& players);
+void createPlayers(std::vector<Player*>& players, bool multiplayer);
 int selectPlayerAmount();
 void showRanking();
 void createCards(std::vector<Card*>& drawDeck);
 void shuffleDeck(std::vector<Card*>& deck);
 void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players);
 void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck);
+void singleplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players);
 void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players);
 void showPlaceDeck(std::vector<Card*>& placeDeck, std::string wishedColor);
 void confirmNextPlayer(Player* player);
+Card* selectCardBOT(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player, std::string wishedColor);
 Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player, std::string wishedColor);
 void drawCard(std::vector<Card*>& drawDeck, Player* player);
 bool checkCard(Card* stackCard, Card* playerCard, std::string& wishedColor);
 void placeCardByPlayer(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Card* card);
-void executeAction(Card* card, bool& reverse, bool& skip, int& plustwo, bool& plusfour, std::string& wishedColor);
-void wishColor(std::string& newColor);
+void executeAction(Card* card, bool& reverse, bool& skip, int& plustwo, bool& plusfour, std::string& wishedColor, bool isBot, Player* player);
+void wishColor(std::string& newColor, bool isBot, Player* player);
 void backToMenu();
 
 #endif
