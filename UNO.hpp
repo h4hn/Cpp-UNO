@@ -25,7 +25,7 @@ class Card
 public:
 	int number;
 	std::string color;
-
+	int points;
 	// Destruktor?
 };
 
@@ -36,7 +36,7 @@ public:
 	bool bot;
 	std::string name;
 	std::vector<Card*> playerCards;
-
+	int score;
 	// Destruktor?
 };
 
@@ -65,5 +65,6 @@ void placeCardByPlayer(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDe
 void executeAction(Card* card, bool& reverse, bool& skip, int& plustwo, bool& plusfour, std::string& wishedColor, bool isBot, Player* player);
 void wishColor(std::string& newColor, bool isBot, Player* player);
 void backToMenu();
+void saveScores(std::vector<Player*>& players);
 
 #endif
