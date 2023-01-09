@@ -3,9 +3,13 @@
 #include <random>
 #include <algorithm>
 #include <cstdlib>
+#include <fstream>
+#include <string>
+#include <chrono>
 
 #include "UNO.hpp"
 #include "CppRandom.hpp"
+#include <functional>
 
 
 int main()
@@ -136,7 +140,7 @@ void startSingleplayer()
 	createCards(drawDeck);
 	distributeCards(drawDeck, players);
 	placeStartCard(drawDeck, placeDeck);
-    singleplayerGame(drawDeck, placeDeck, players);
+	singleplayerGame(drawDeck, placeDeck, players);
 }
 
 void startMultiplayer()
@@ -157,7 +161,7 @@ void createPlayers(std::vector<Player*>& players, bool multiplayer)
 {
 	int numberOfPlayers = selectPlayerAmount();
 	std::cout << "Es spielen " << numberOfPlayers << " Spieler mit." << std::endl;
-	
+
 	if (multiplayer)
 	{
 		for (int i = 1; i < numberOfPlayers + 1; i++)
@@ -184,14 +188,14 @@ void createPlayers(std::vector<Player*>& players, bool multiplayer)
 		for (int i = 2; i < numberOfPlayers + 1; i++)
 		{
 			std::string name = "BOT";
-			name.push_back(i+47);
+			name.push_back(i + 47);
 			Player* player = new Player;
 			player->name = name;
 			player->bot = true;
 			players.push_back(player);
 		}
 	}
-	
+
 }
 
 int selectPlayerAmount()
@@ -229,6 +233,14 @@ void createCards(std::vector<Card*>& drawDeck)
 			Card* card = new Card;
 			card->color = "rot";
 			card->number = j;
+			if (j < 10)
+			{
+				card->points = j;
+			}
+			else 
+			{
+				card->points = 20;
+			}
 			drawDeck.push_back(card);
 		}
 	}
@@ -240,6 +252,14 @@ void createCards(std::vector<Card*>& drawDeck)
 			Card* card = new Card;
 			card->color = "blau";
 			card->number = j;
+			if (j < 10)
+			{
+				card->points = j;
+			}
+			else
+			{
+				card->points = 20;
+			}
 			drawDeck.push_back(card);
 		}
 	}
@@ -251,6 +271,14 @@ void createCards(std::vector<Card*>& drawDeck)
 			Card* card = new Card;
 			card->color = "gelb";
 			card->number = j;
+			if (j < 10)
+			{
+				card->points = j;
+			}
+			else
+			{
+				card->points = 20;
+			}
 			drawDeck.push_back(card);
 		}
 	}
@@ -262,6 +290,14 @@ void createCards(std::vector<Card*>& drawDeck)
 			Card* card = new Card;
 			card->color = "gruen";
 			card->number = j;
+			if (j < 10)
+			{
+				card->points = j;
+			}
+			else
+			{
+				card->points = 20;
+			}
 			drawDeck.push_back(card);
 		}
 	}
@@ -273,6 +309,7 @@ void createCards(std::vector<Card*>& drawDeck)
 			Card* card = new Card;
 			card->color = "schwarz";
 			card->number = i;				// Wenn schwarz Nummer 1 hat --> +4 Karte
+			card->points = 50;
 			drawDeck.push_back(card);
 		}
 	}
@@ -469,8 +506,20 @@ std::string getCardInfo(Card* card)
 
 void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck)
 {
-	Card* startCard = drawDeck.front();
-	drawDeck.erase(drawDeck.begin());
+	bool isActionCard = false;
+	Card* startCard = new Card;
+
+	do {
+		isActionCard = false;
+		startCard = drawDeck.front();
+		drawDeck.erase(drawDeck.begin());
+		if (startCard->color == "schwarz" || startCard->number >= 10 && startCard->number <= 12)
+		{
+			isActionCard = true;
+			drawDeck.push_back(startCard);
+		}
+	} while (isActionCard);
+
 	placeDeck.push_back(startCard);
 }
 
@@ -499,13 +548,25 @@ void singleplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDec
 		currentPlayer = players[currentPlayerID];
 		if (currentPlayer->playerCards.size() != 0)
 		{
-			confirmNextPlayer(currentPlayer);
-			system("cls");
-			std::cout << "Aktueller Spieler: " << currentPlayer->name << std::endl << std::endl;
+			if (!currentPlayer->bot)
+			{
+				confirmNextPlayer(currentPlayer);
+				system("cls");
+				std::cout << "Aktueller Spieler: " << currentPlayer->name << std::endl << std::endl;
+			}
+			
 
 			if (skip)
 			{
-				std::cout << "Du musst diese Runde aussetzen." << std::endl << std::endl;
+				if (currentPlayer->bot)
+				{
+					std::cout << currentPlayer->name << " muss diese Runde aussetzen." << std::endl << std::endl;
+				}
+				else
+				{
+					std::cout << "Du musst diese Runde aussetzen." << std::endl << std::endl;
+				}
+				
 				skip = false;
 			}
 			else
@@ -531,21 +592,14 @@ void singleplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDec
 						{
 							//Legt die +2-Karte
 							placeCardByPlayer(drawDeck, placeDeck, plusTwoCard);
+							currentPlayer->score += plusTwoCard->points;
 							currentPlayer->playerCards.erase(currentPlayer->playerCards.begin() + plusTwoIndex);
 							plustwo += 2;
-							
-							/* Bedingung fuer andere Entscheidung des Bots?
-							for (int i = 0; i < plustwo; i++)
-							{
-								drawCard(drawDeck, currentPlayer);
-							}
-							plustwo = 0;
-							*/
-								
+							std::cout << currentPlayer->name << " hat eine " << getCardInfo(plusTwoCard) << " gelegt." << std::endl << std::endl;
 						}
 						else
 						{
-							std::cout << "Du musst " << plustwo << " Karten ziehen." << std::endl << std::endl;
+							std::cout << currentPlayer->name << " muss " << plustwo << " Karten ziehen." << std::endl << std::endl;
 							for (int i = 0; i < plustwo; i++)
 							{
 								drawCard(drawDeck, currentPlayer);
@@ -558,7 +612,7 @@ void singleplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDec
 						/*
 						* Spieler muss 4 Karten ziehen und darf keine Karte legen
 						*/
-						std::cout << "Du musst 4 Karten ziehen." << std::endl << std::endl;
+						std::cout << currentPlayer->name << " muss 4 Karten ziehen." << std::endl << std::endl;
 						for (int i = 0; i < 4; i++)
 						{
 							drawCard(drawDeck, currentPlayer);
@@ -573,7 +627,14 @@ void singleplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDec
 						{
 							wishedColor = "";
 							placeCardByPlayer(drawDeck, placeDeck, selectedCard);
+							currentPlayer->score += selectedCard->points;
 							executeAction(selectedCard, reverse, skip, plustwo, plusfour, wishedColor, true, currentPlayer);
+							std::cout << currentPlayer->name << " hat eine " << getCardInfo(selectedCard) << " gelegt." << std::endl;
+							if (selectedCard->color == "schwarz")
+							{
+								std::cout << currentPlayer->name << " hat sich die Farbe " << wishedColor << " gewuenscht." << std::endl;
+							}
+							std::cout << std::endl;
 						}
 					}
 				}
@@ -621,6 +682,7 @@ void singleplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDec
 							if (choice == 'y')
 							{
 								placeCardByPlayer(drawDeck, placeDeck, plusTwoCard);
+								currentPlayer->score += plusTwoCard->points;
 								currentPlayer->playerCards.erase(currentPlayer->playerCards.begin() + plusTwoIndex);
 								plustwo += 2;
 							}
@@ -665,6 +727,7 @@ void singleplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDec
 						{
 							wishedColor = "";
 							placeCardByPlayer(drawDeck, placeDeck, selectedCard);
+							currentPlayer->score += selectedCard->points;
 							executeAction(selectedCard, reverse, skip, plustwo, plusfour, wishedColor, false, currentPlayer);
 						}
 					}
@@ -706,6 +769,19 @@ void singleplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDec
 			}
 		}
 	}
+
+	system("cls");
+	std::cout << "Das Spiel ist zu Ende. Im Folgenden seht ihr die Rangliste des Spiels." << std::endl << std::endl;
+
+	int rank = 1;
+	for (Player* player : ranking)
+	{
+		std::cout << rank << ". Platz:\t" << player->name << "\t" << player->score << " Punkte" << std::endl;
+		rank++;
+	}
+	saveScores(players);
+	backToMenu();
+	system("cls");
 }
 
 void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players)
@@ -786,6 +862,7 @@ void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck
 						if (choice == 'y')
 						{
 							placeCardByPlayer(drawDeck, placeDeck, plusTwoCard);
+							currentPlayer->score += plusTwoCard->points;
 							currentPlayer->playerCards.erase(currentPlayer->playerCards.begin() + plusTwoIndex);
 							plustwo += 2;
 						}
@@ -830,6 +907,7 @@ void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck
 					{
 						wishedColor = "";
 						placeCardByPlayer(drawDeck, placeDeck, selectedCard);
+						currentPlayer->score += selectedCard->points;
 						executeAction(selectedCard, reverse, skip, plustwo, plusfour, wishedColor, false, currentPlayer);
 					}
 				}
@@ -878,9 +956,10 @@ void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck
 	int rank = 1;
 	for (Player* player : ranking)
 	{
-		std::cout << rank << ". Platz:\t" << player->name << std::endl;
+		std::cout << rank << ". Platz:\t" << player->name << "\t" << player->score << " Punkte" << std::endl;
 		rank++;
 	}
+	saveScores(players);
 	backToMenu();
 	system("cls");
 }
@@ -926,78 +1005,87 @@ Card* selectCardBOT(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck,
 	Card* selectedCard = NULL; //output
 	bool correctInput = false;
 	bool cardDrawn = false;
-    int stepcount = 0;
-    int priority = 0;
-    std::vector<int> possibles;
+	int stepcount = 0;
+	int priority = 0;
+	int index = 0;
+	std::vector<int> possibles;
 
-    if(wishedColor == "")
-    {
-        //checks possible Cards
-		for(Card* card: player->playerCards)
-        {
-            stepcount++;
-            if(checkCard(placeDeckCard, card, wishedColor))
-            {
-                possibles.push_back(stepcount);
-            }
-        }
-        if(!possibles.empty())
-        {
-            for(int num: possibles)
-            {
-                if(player->playerCards[num]->color == placeDeckCard->color && player->playerCards[num]->number < 10) // Auswahl gleicher Farbe mit beliebiger Nummer (keine Actionkarte)
-                {
-                    selectedCard = player->playerCards[num];
-                    priority = 3;
-                }
-                else if(player->playerCards[num]->number == placeDeckCard->number) // Auswahl gleicher Zahl mit beliebiger Farbe (Auch Actionkarte wenn gleich)
-                {
-                    if(priority < 3)
-                    {
-                        selectedCard = player->playerCards[num];
-                        priority = 2;
-                    }
-                }
-                else if(player->playerCards[num]->color == placeDeckCard->color) // Auswahl gleicherfarbiger Actionkarte
-                {
-                    if(priority < 2)
-                    {
-                        selectedCard = player->playerCards[num];
-                        priority = 1;
-                    }
-                }
-                else                                                            // Auswahl schwarzer Karte
-                {
-                    if(priority < 1)
-                    {
-                        selectedCard = player->playerCards[num];
-                        priority = 0;
-                    }
-                }
-            }
-        }
+	if (wishedColor == "")
+	{
+		//checks possible Cards
+		for (Card* card : player->playerCards)
+		{			
+			if (checkCard(placeDeckCard, card, wishedColor))
+			{
+				possibles.push_back(stepcount);
+			}
+			stepcount++;
+		}
+		stepcount = 0;
+		if (!possibles.empty())
+		{
+			for (int num : possibles)
+			{
+				if (player->playerCards[num]->color == placeDeckCard->color && player->playerCards[num]->number < 10) // Auswahl gleicher Farbe mit beliebiger Nummer (keine Actionkarte)
+				{
+					selectedCard = player->playerCards[num];
+					priority = 3;
+					index = num;
+				}
+				else if (player->playerCards[num]->number == placeDeckCard->number) // Auswahl gleicher Zahl mit beliebiger Farbe (Auch Actionkarte wenn gleich)
+				{
+					if (priority < 3)
+					{
+						selectedCard = player->playerCards[num];
+						priority = 2;
+						index = num;
+					}
+				}
+				else if (player->playerCards[num]->color == placeDeckCard->color) // Auswahl gleicherfarbiger Actionkarte
+				{
+					if (priority < 2)
+					{
+						selectedCard = player->playerCards[num];
+						priority = 1;
+						index = num;
+					}
+				}
+				else                                                            // Auswahl schwarzer Karte
+				{
+					if (priority < 1)
+					{
+						selectedCard = player->playerCards[num];
+						priority = 0;
+						index = num;
+					}
+				}
+			}
+		}
 		else
-        {
-            drawCard(drawDeck, player);
-            if(checkCard(placeDeckCard, player->playerCards[player->playerCards.size()-1], wishedColor))
-            {
-                selectedCard = player->playerCards[player->playerCards.size()-1];
-            }
-        }
-    }
-    else
-    {
-        for(Card* card: player->playerCards)
-        {
-            if(card->color == wishedColor)
-            {
-                selectedCard = card;
-            }
-        }
-    }
-    player->playerCards.erase(player->playerCards.begin() + selection);
-    system("cls");
-    return selectedCard;
+		{
+			drawCard(drawDeck, player);
+			if (checkCard(placeDeckCard, player->playerCards[player->playerCards.size() - 1], wishedColor))
+			{
+				selectedCard = player->playerCards[player->playerCards.size() - 1];
+				index = player->playerCards.size() - 1;
+			}
+		}
+	}
+	else
+	{
+		for (Card* card : player->playerCards)
+		{
+			if (card->color == wishedColor)
+			{
+				selectedCard = card;
+				index = stepcount;
+			}
+			stepcount++;
+		}
+		stepcount = 0;
+	}
+	player->playerCards.erase(player->playerCards.begin() + index);
+	return selectedCard;
 }
 
 Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player, std::string wishedColor)
@@ -1198,74 +1286,81 @@ void executeAction(Card* card, bool& reverse, bool& skip, int& plustwo, bool& pl
 
 void wishColor(std::string& newColor, bool isBot, Player* player)
 {
-	if(!isBot)
-    {
-        char selection;
-        bool correctInput = false;
-        while (!correctInput)
-        {
-            std::cout << "Bitte waehle die Farbe, die du dir wuenschst." << std::endl
-                      << "[1]\tRot" << std::endl
-                      << "[2]\tGruen" << std::endl
-                      << "[3]\tBlau" << std::endl
-                      << "[4]\tGelb" << std::endl;
-            std::cin >> selection;
-            if (selection == '1' || selection == '2' || selection == '3' || selection == '4')
-            {
-                correctInput = true;
-            }
-            else
-            {
-                std::cout << "Bitte geben Sie eine gueltige Eingabe ein." << std::endl;
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                system("cls");
-            }
-        }
-        switch (selection)
-        {
-            case '1': newColor = "rot";
-                break;
-            case '2': newColor = "gruen";
-                break;
-            case '3': newColor = "blau";
-                break;
-            case '4': newColor = "gelb";
-                break;
-            default:
-                break;
-        }
-    }
-    else
-    {
-        int reds = 0;
-        int blues = 0;
-        int greens = 0;
-        int yellows = 0;
-        int choice = 0;
-        for(Card* card: player->playerCards)
-        {
-            if(card->color == "rot") reds++;
-            else if(card->color == "blau") blues++;
-            else if(card->color == "gruen") greens++;
-            else if(card->color == "gelb") yellows++;
-        }
-        //Auswahl von welcher Farbe der Bot am meisten hat
-        std::vector<int> colors = {reds, blues, greens, yellows};
+	if (!isBot)
+	{
+		char selection;
+		bool correctInput = false;
+		while (!correctInput)
+		{
+			std::cout << "Das sind deine Karten: " << std::endl;
+			
+			for (Card* card : player->playerCards)
+			{
+				std::cout << getCardInfo(card) << std::endl;
+			}
+				
+			std::cout << std::endl << "Bitte waehle die Farbe, die du dir wuenschst." << std::endl
+				<< "[1]\tRot" << std::endl
+				<< "[2]\tGruen" << std::endl
+				<< "[3]\tBlau" << std::endl
+				<< "[4]\tGelb" << std::endl;
+			std::cin >> selection;
+			if (selection == '1' || selection == '2' || selection == '3' || selection == '4')
+			{
+				correctInput = true;
+			}
+			else
+			{
+				std::cout << "Bitte geben Sie eine gueltige Eingabe ein." << std::endl;
+				std::cin.clear();
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				system("cls");
+			}
+		}
+		switch (selection)
+		{
+		case '1': newColor = "rot";
+			break;
+		case '2': newColor = "gruen";
+			break;
+		case '3': newColor = "blau";
+			break;
+		case '4': newColor = "gelb";
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		int reds = 0;
+		int blues = 0;
+		int greens = 0;
+		int yellows = 0;
+		int choice = 0;
+		for (Card* card : player->playerCards)
+		{
+			if (card->color == "rot") reds++;
+			else if (card->color == "blau") blues++;
+			else if (card->color == "gruen") greens++;
+			else if (card->color == "gelb") yellows++;
+		}
+		//Auswahl von welcher Farbe der Bot am meisten hat
+		std::vector<int> colors = { reds, blues, greens, yellows };
 
-        for(int i = 0; i<colors.size(); i++)
-        {
-            if(choice <= colors[i])
-            {
-                choice = colors[i];
-            }
-        }
+		for (int i = 0; i < colors.size(); i++)
+		{
+			if (choice <= colors[i])
+			{
+				choice = colors[i];
+			}
+		}
 
-        if(choice == reds) newColor = "rot";
-        else if(choice == blues) newColor = "blau";
-        else if(choice == greens) newColor = "gruen";
-        else if(choice == yellows) newColor = "gelb";
-    }
+		if (choice == reds) newColor = "rot";
+		else if (choice == blues) newColor = "blau";
+		else if (choice == greens) newColor = "gruen";
+		else if (choice == yellows) newColor = "gelb";
+	}
 
 }
 
@@ -1280,6 +1375,65 @@ void backToMenu()
 	if (selection == 'm')
 	{
 		menu();
+	}
+}
+
+void saveScores(std::vector<Player*>& players)
+{
+	bool correctinput = false;
+	char selection;
+	while (!correctinput)
+	{
+		std::cout << std::endl << "Moechtest du die Scores speichern? [y|n]" << std::endl;
+		std::cin >> selection;
+		if (selection == 'y' || selection == 'n')
+		{
+			correctinput = true;
+		}
+		else
+		{
+			std::cout << "Bitte gebe eine gueltige Eingabe ein." << std::endl;
+		}
+	}
+	if (selection == 'y')
+	{
+		auto now = time(0);
+		char time[26];
+		ctime_s(time, sizeof time, &now);
+		
+		std::vector<std::string> ranking;
+
+		std::string line;
+		std::ifstream scoreFileRead("scores.txt");
+		if (scoreFileRead.is_open())
+		{
+			while (getline(scoreFileRead, line))
+			{
+				ranking.push_back(line);
+			}
+			scoreFileRead.close();
+		}
+		else std::cout << "Datei kann nicht geoeffnet werden." << std::endl;
+
+		for (Player* player : players)
+		{
+			if (!player->bot)
+			{
+				std::string info = std::to_string(player->score) + ": " + player->name + " am " + time;
+				ranking.push_back(info);
+			}
+		}
+
+
+		sort(ranking.begin(), ranking.end(), std::greater<std::string>());
+
+		std::ofstream scoreFileWrite;
+		scoreFileWrite.open("scores.txt");
+		for (std::string rank : ranking)
+		{
+			scoreFileWrite << rank + "\n";
+		}
+		scoreFileWrite.close();
 	}
 }
 
