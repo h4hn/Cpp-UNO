@@ -17,15 +17,12 @@ Spielen:
     - Gewinner ist derjenige, der als erster alle Karten abgelegt hat.
 
 Punktesystem:
-    - Dies beeinflusst nicht die Rangfolge einer Runde! Das Punktesystem
-      existiert, damit man in verschiedenen Runden trotzdem Spieler 
-      miteinander vergleichen kann.
-    - Punkte erhaelt man durch das Ablegen einer Karte.
-    - Dabei erhaelt man je nach Karte unterschiedlich viele Punkte.
-    - Der Punkteschlüssel setzt sich folgendermaßen zusammen:
-        - Fuer Standard-Karten entsprichen die Punkte der Zahl der Karte
-        - Fuer farbige Aktionskarten erhaelt man 20 Punkte.
-        - Fuer schwarze Karten erhaelt man 50 Punkte.
+    - Wie viel Punkte ein Spieler erhaelt, haengt von den folgenden Punkten
+      ab: 
+        - Wie viele Karten er gelegt hat, bis er beendet hat.
+        - Wie viele Karten die anderen Spieler noch hatten, als er seine
+          letzte Karte abgelegt hat.
+          
 
 Aktionskarten:
     - Legt ein Spieler eine "Zwei Ziehen"-Karte, muss der naechste Spieler
