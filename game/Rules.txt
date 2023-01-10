@@ -1,1 +1,36 @@
+Regeln
+------
+Vorbereitung:
+    - Es werden jedem Spieler sieben Karten ausgeteilt.
+    - Der Rest kommt auf einen verdeckten Stapel in die mitte
+    - Von diesem verdeckten Stapel wird eine Karte gezogen, aufgedeckt
+      und dann auf den Ablegestapel gelegt.
+    - Daraufhin darf ein zufaellig ausgewaehlter Spieler starten
 
+Spielen:
+    - Nacheinander legt jeder Spieler pro Runde eine Karte ab.
+    - Die abzulegende Karte muss dieselbe Zahl oder dieselbe Farbe wie
+      die oberste Karte des ablagestapels haben
+    - Moechte der Spieler aus taktischen Gruenden keine Karte legen oder
+      hat keine Karte die er legen kann, muss er eine Karte ziehen.
+    - Diese darf der Spieler sofott ablegen.
+    - Gewinner ist derjenige, der als erster alle Karten abgelegt hat.
+
+Aktionskarten:
+    - Legt ein Spieler eine "Zwei Ziehen"-Karte, muss der naechste Spieler
+      zwei karten ziehen.
+    - Legt ein Spieler eien "Richtungswechsel"-Karte, wird die Richtung
+      des Spiels umgedreht
+    - Legt ein Spieler eine "Aussetzen"-Karte, wird der naechste Spieler
+      uebersprungen und darf keine Karte legen.
+    - Legt ein Spieler eine "Farbwahl"-Karte, gibt dieser dem naechsten
+      Spieler die zu legende Farbe vor
+    - Legt ein Spieler eine "Farbwahl-plus-4"-Karte, gibt dieser dem naechsten
+      Spieler die zu legende Farbe vor. Zudem muss der naechste Spieler 4
+      Karten aufziehen.
+
+    Wenn 0-7-Regel aktiv:
+    - Legt ein Spieler eine "0" beliebiger Farbe, werden die Karten jedes
+      Spielers im Kreis getauscht.
+    - Legt ein Spieler eien "7" beliebiger Farbe, kann der legende Spieler
+      auswaehlen, mit welchem anderen Spieler er die Karten tauschen will.
