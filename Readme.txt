@@ -5,7 +5,7 @@ What is included?
   - Singleplayer versus up to 3 Bots
   - Up to 4 players can play together in Multiplayer-Mode
   - Save game within a round
-  - Official Point System with the possibility to save scores at the end of a round
+  - Point System with the possibility to save scores at the end of a round
   - View high scores
   - De-/Activate the Seven-O-Rule
 For more information read the rules in "/game/Rules.txt".
