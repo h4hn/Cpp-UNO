@@ -817,7 +817,7 @@ void confirmNextPlayer(Player* player)
 void showPlaceDeck(std::vector<Card*>& placeDeck, std::string wishedColor)
 {
     std::string shownCard = getCardInfo(placeDeck.front());
-    for(int i = 0; i < 50 + shownCard.length(); i++) std::cout << "=";
+    for (int i = 0; i < 50 + shownCard.length(); i++) std::cout << "=";
     std::cout << std::endl;
     std::cout << "Die aktuell oberste Karte auf dem Legestapel ist: " << shownCard << std::endl << std::endl;
     if (wishedColor != "")
@@ -825,9 +825,9 @@ void showPlaceDeck(std::vector<Card*>& placeDeck, std::string wishedColor)
         std::cout << "Es wurde sich die Farbe " << wishedColor << " gewuenscht." << std::endl << std::endl;
     }
     printCard(placeDeck.front());
-    for(int i = 0; i < 50 + shownCard.length(); i++) std::cout << "=";
+    for (int i = 0; i < 50 + shownCard.length(); i++) std::cout << "=";
     std::cout << std::endl;
-    
+
 }
 
 Card* selectCardBOT(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player, std::string wishedColor)
@@ -1471,7 +1471,7 @@ void writeScore(int selection) {
     switch (selection)
     {
     case 1:
-        scoresFile.open("./savegame/savegame1.txt");
+        scoresFile.open("./savegames/savegame1.txt");
 
         //Angaben, wie viele Zeilen vorhanden sind
         lines = playerAmountSave + 2;
@@ -1515,7 +1515,7 @@ void writeScore(int selection) {
         scoresFile.close();
         break;
     case 2:
-        scoresFile.open("./savegame/savegame2.txt");
+        scoresFile.open("./savegames/savegame2.txt");
 
         //Angaben, wie viele Zeilen vorhanden sind
         lines = playerAmountSave + 2;
@@ -1559,7 +1559,7 @@ void writeScore(int selection) {
         scoresFile.close();
         break;
     case 3:
-        scoresFile.open("./savegame/savegame3.txt");
+        scoresFile.open("./savegames/savegame3.txt");
 
         //Angaben, wie viele Zeilen vorhanden sind
         lines = playerAmountSave + 2;
@@ -1662,7 +1662,7 @@ void readScore(int selection) {
     switch (selection)
     {
     case 1:
-        readScore.open("./savegame/savegame1.txt");
+        readScore.open("./savegames/savegame1.txt");
         if (readScore.is_open()) {
 
             //Spieleranzahl ermitteln
@@ -1676,7 +1676,7 @@ void readScore(int selection) {
             std::string delimiter_char = ",";
             std::string token;
             size_t pos = 0;
-            
+
             for (int i = 0; i < players; i++)
             {
                 Player* player = new Player;
@@ -1787,7 +1787,7 @@ void readScore(int selection) {
 
 
         break;
-    case 2: readScore.open("./savegame/savegame2.txt");
+    case 2: readScore.open("./savegames/savegame2.txt");
         if (readScore.is_open()) {
 
             //Spieleranzahl ermitteln
@@ -1909,7 +1909,7 @@ void readScore(int selection) {
         readScore.close();
         break;
     case 3:
-        readScore.open("./savegame/savegame3.txt");
+        readScore.open("./savegames/savegame3.txt");
         if (readScore.is_open()) {
 
             //Spieleranzahl ermitteln
@@ -2045,12 +2045,12 @@ void printCard(Card* card)
     char cstring[256];
     f.open("Cards.txt", std::ios::in);
 
-    while(!f.eof())
+    while (!f.eof())
     {
         f.getline(cstring, sizeof(cstring));
-        if(cstring ==  getCardInfo(card))
+        if (cstring == getCardInfo(card))
         {
-            for(int i = 0; i<8; i++)
+            for (int i = 0; i < 8; i++)
             {
                 f.getline(cstring, sizeof(cstring));
                 std::cout << cstring << std::endl;
@@ -2068,34 +2068,34 @@ void printPlayerCards(Player* player)
     std::vector<int> rows;
 
 
-    for(int i = 0; i < player->playerCards.size(); i++)
+    for (int i = 0; i < player->playerCards.size(); i++)
     {
         f.open("Cards.txt", std::ios::in);
         int rowNumber = 0;
         bool foundCard = false;
 
-        while(!f.eof() && !foundCard)
+        while (!f.eof() && !foundCard)
         {
             f.getline(cstring, sizeof(cstring));
-            if(cstring ==  getCardInfo(player->playerCards[i]))
+            if (cstring == getCardInfo(player->playerCards[i]))
             {
-                    f.getline(cstring, sizeof(cstring));
-                    std::cout << cstring << " ";
-                    rows.push_back(rowNumber);
-                    foundCard = true;
-                    f.close();
+                f.getline(cstring, sizeof(cstring));
+                std::cout << cstring << " ";
+                rows.push_back(rowNumber);
+                foundCard = true;
+                f.close();
             }
             rowNumber++;
         }
         f.close();
     }
     std::cout << std::endl;
-    for(int i = 0; i<7;i++)
+    for (int i = 0; i < 7; i++)
     {
-        for(int j = 0; j < rows.size(); j++)
+        for (int j = 0; j < rows.size(); j++)
         {
             f.open("Cards.txt", std::ios::in);
-            for(int k = 0; k < rows[j] + 2; k++)
+            for (int k = 0; k < rows[j] + 2; k++)
             {
                 f.getline(cstring, sizeof(cstring));
             }
