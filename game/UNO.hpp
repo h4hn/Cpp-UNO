@@ -6,7 +6,6 @@ class Card
 public:
     int number;
     std::string color;
-    int points;
     // Destruktor?
 };
 
@@ -17,6 +16,7 @@ public:
     bool bot;
     std::string name;
     std::vector<Card*> playerCards;
+    int laidCards;
     int score;
     // Destruktor?
 };
@@ -58,6 +58,7 @@ void loadGame();
 void readScore(int selection);
 void printPlayerCards(Player* player);
 void printCard(Card* card);
+void drawLine(Player* player);
 void clearScreen();
 
 //Spielstandspeicherung
