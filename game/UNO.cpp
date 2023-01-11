@@ -103,6 +103,19 @@ void startGame(bool multiplayer)
     chooseRules(specialRules);
 
     game(drawDeck, placeDeck, players, specialRules, colorWish);
+
+    for (Card* card : drawDeck)
+    {
+        delete card;
+    }
+    for (Card* card : placeDeck)
+    {
+        delete card;
+    }
+    for (Player* player : players)
+    {
+        delete player;
+    }
 }
 
 void createPlayers(std::vector<Player*>& players, bool multiplayer)
