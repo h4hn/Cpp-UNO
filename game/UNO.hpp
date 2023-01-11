@@ -1,25 +1,6 @@
 #ifndef UNO_HPP
 #define UNO_HPP
 
-/*
-enum class Color
-{
-    rot,
-    gelb,
-    gruen,
-    blau,
-    schwarz
-};
-*/
-
-enum class Action
-{
-    // Diese Aktionen werden als weitere Nummern in der Karte definiert
-    aussetzen,				// = 10
-    richtungswechsel,		// = 11
-    zweiZiehen,				// = 12
-};
-
 class Card
 {
 public:
