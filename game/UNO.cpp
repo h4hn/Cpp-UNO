@@ -113,6 +113,9 @@ void startGame(bool multiplayer)
     placeStartCard(drawDeck, placeDeck);
     chooseRules(specialRules);
 
+    startPlayerID = GetRandomNumberBetween(0, players.size() - 1);
+    plustwoLoad = 0;
+
     game(drawDeck, placeDeck, players, specialRules, colorWish);
 
     for (Card* card : drawDeck)
@@ -478,6 +481,7 @@ void chooseRules(bool& specialRules)
     {
         specialRules = false;
     }
+    rulesActive = specialRules;
 }
 
 void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players, bool& specialRules, std::string& _wishedColor)
@@ -485,17 +489,17 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
     clearScreen();
 
     bool finished = false;
-    int startPlayerID = GetRandomNumberBetween(0, players.size() - 1);
+    //int startPlayerID = GetRandomNumberBetween(0, players.size() - 1);
     int currentPlayerID = startPlayerID;
 
     std::vector<Player*> ranking;
 
     // Aktionskarten - Parameter
-    bool skip = false;				// number == 10
-    bool reverse = false;			// number == 11
-    int plustwo = 0;				// number == 12
-    bool plusfour = false;			// color == black && number == 1
-    std::string wishedColor = _wishedColor;	// color == black
+    bool skip = false;				            // number == 10
+    bool reverse = false;			            // number == 11
+    int plustwo = plustwoLoad;				    // number == 12
+    bool plusfour = false;			            // color == black && number == 1
+    std::string wishedColor = _wishedColor;	    // color == black
     // -------------------------
 
     Player* currentPlayer = players[currentPlayerID];
@@ -507,6 +511,8 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
         {
             if (!currentPlayer->bot)
             {
+                actualPlayerID = currentPlayerID;
+                players[currentPlayerID]->hasPlusTwo = plustwo;
                 confirmNextPlayer(currentPlayer);
                 clearScreen();
                 //Speichern des aktuellen drawDecks
@@ -529,12 +535,14 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
 
             if (skip)
             {
+                
                 if (currentPlayer->bot)
                 {
                     std::cout << currentPlayer->name << " muss diese Runde aussetzen." << std::endl << std::endl;
                 }
                 else
                 {
+                    drawLine(currentPlayer);
                     std::cout << "Du musst diese Runde aussetzen." << std::endl << std::endl;
                 }
 
@@ -676,6 +684,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                         }
                         else
                         {
+                            drawLine(currentPlayer);
                             std::cout << "Du musst " << plustwo << " Karten ziehen." << std::endl << std::endl;
                             for (int i = 0; i < plustwo; i++)
                             {
@@ -689,6 +698,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                         /*
                         * Spieler muss 4 Karten ziehen und darf keine Karte legen
                         */
+                        drawLine(currentPlayer);
                         std::cout << "Du musst 4 Karten ziehen." << std::endl << std::endl;
                         for (int i = 0; i < 4; i++)
                         {
@@ -785,6 +795,7 @@ void confirmNextPlayer(Player* player)
 {
     // Erst zum naechsten Spieler wechseln, wenn er bereit ist, damit niemand anderes seine Karten sieht
     bool correctInput = false;
+    bool saveGame = false;
     bool exitToMenu = false;
 
     while (!correctInput)
@@ -792,26 +803,38 @@ void confirmNextPlayer(Player* player)
         std::string confirmPlayer;
         std::cout << "Der naechste Spieler ist " << player->name << "." << std::endl << std::endl
             << "Bitte mit [y] bestaetigen, dass gewechselt werden kann." << std::endl
-            << "Bitte mit [x] das Speichern des Spiels bestaetigen." << std::endl;
+            << "Bitte mit [s] das Speichern des Spiels bestaetigen." << std::endl
+            << "Bitte mit [x] das Beenden des Spiels bestaetigen." << std::endl;
         std::cin >> confirmPlayer;
 
         if (confirmPlayer == "y")
         {
             correctInput = true;
+            saveGame = false;
+            exitToMenu = false;
+        }
+        else if (confirmPlayer == "s") {
+            correctInput = true;
+            saveGame = true;
             exitToMenu = false;
         }
         else if (confirmPlayer == "x") {
             correctInput = true;
+            saveGame = false;
             exitToMenu = true;
         }
         else
         {
-            std::cout << "Bitte gebe nur [y] ein, wenn du bereit bist." << std::endl;
+            std::cout << "Bitte gebe entweder y, s oder x ein." << std::endl;
         }
     }
 
-    if (exitToMenu) {
+    if (saveGame) {
         safeScore(player);
+        menu();
+    }
+    else if (exitToMenu) {
+        menu();
     }
 }
 
@@ -1343,7 +1366,7 @@ void saveScores(std::vector<Player*>& players)
         int MAX_POINTS = 0;
 
         std::string line;
-        std::fstream scoreFileRead("scores.txt");
+        std::ifstream scoreFileRead("scores.txt");
         if (scoreFileRead.is_open())
         {
             while (getline(scoreFileRead, line))
@@ -1399,7 +1422,7 @@ void showRanking()
     int MAX_POINTS = 0;
 
     std::string line;
-    std::fstream scoreFileRead("scores.txt");
+    std::ifstream scoreFileRead("scores.txt");
     if (scoreFileRead.is_open())
     {
         while (getline(scoreFileRead, line))
@@ -1477,141 +1500,70 @@ void writeScore(int selection) {
     {
     case 1:
         scoresFile.open("./savegames/savegame1.txt");
-
-        //Angaben, wie viele Zeilen vorhanden sind
-        lines = playerAmountSave + 2;
-
-        scoresFile << lines << std::endl;
-
-        for (int i = 0; i < playerAmountSave; i++) {
-            scoresFile << playerScore[i]->id << std::endl;
-            scoresFile << playerScore[i]->name << std::endl;
-            std::vector<Card*> playerScoreCards;
-            if (!playerScoreCards.empty()) {
-                playerScoreCards.clear();
-            }
-            playerScoreCards = playerScore[i]->playerCards;
-            for (int j = 0; j < playerScoreCards.size(); j++) {
-                scoresFile << playerScoreCards[j]->number << ",";
-            }
-            scoresFile << std::endl;
-            for (int j = 0; j < playerScoreCards.size(); j++) {
-                scoresFile << playerScoreCards[j]->color << ",";
-            }
-            scoresFile << std::endl;
-        }
-        scoresFile << actualPlaceDeck[0]->number << std::endl;
-        scoresFile << actualPlaceDeck[0]->color << std::endl;
-        if (actualPlaceDeck[0]->color == "schwarz")
-        {
-            scoresFile << wishedColorSave << std::endl;
-        }
-
-
-        for (int i = 0; i < actualDrawDeck.size(); i++) {
-            scoresFile << actualDrawDeck[i]->number << ",";
-        }
-        scoresFile << std::endl;
-        for (int i = 0; i < actualDrawDeck.size(); i++) {
-            scoresFile << actualDrawDeck[i]->color << ",";
-        }
-        scoresFile << std::endl;
-
-        scoresFile.close();
         break;
     case 2:
         scoresFile.open("./savegames/savegame2.txt");
-
-        //Angaben, wie viele Zeilen vorhanden sind
-        lines = playerAmountSave + 2;
-
-        scoresFile << lines << std::endl;
-
-        for (int i = 0; i < playerAmountSave; i++) {
-            scoresFile << playerScore[i]->id << std::endl;
-            scoresFile << playerScore[i]->name << std::endl;
-            std::vector<Card*> playerScoreCards;
-            if (!playerScoreCards.empty()) {
-                playerScoreCards.clear();
-            }
-            playerScoreCards = playerScore[i]->playerCards;
-            for (int j = 0; j < playerScoreCards.size(); j++) {
-                scoresFile << playerScoreCards[j]->number << ",";
-            }
-            scoresFile << std::endl;
-            for (int j = 0; j < playerScoreCards.size(); j++) {
-                scoresFile << playerScoreCards[j]->color << ",";
-            }
-            scoresFile << std::endl;
-        }
-        scoresFile << actualPlaceDeck[0]->number << std::endl;
-        scoresFile << actualPlaceDeck[0]->color << std::endl;
-
-        if (actualPlaceDeck[0]->color == "schwarz")
-        {
-            scoresFile << wishedColorSave << std::endl;
-        }
-
-        for (int i = 0; i < actualDrawDeck.size(); i++) {
-            scoresFile << actualDrawDeck[i]->number << ",";
-        }
-        scoresFile << std::endl;
-        for (int i = 0; i < actualDrawDeck.size(); i++) {
-            scoresFile << actualDrawDeck[i]->color << ",";
-        }
-        scoresFile << std::endl;
-
-        scoresFile.close();
         break;
     case 3:
-        scoresFile.open("./savegames/savegame3.txt");
-
-        //Angaben, wie viele Zeilen vorhanden sind
-        lines = playerAmountSave + 2;
-
-        scoresFile << lines << std::endl;
-
-        for (int i = 0; i < playerAmountSave; i++) {
-            scoresFile << playerScore[i]->id << std::endl;
-            scoresFile << playerScore[i]->name << std::endl;
-            std::vector<Card*> playerScoreCards;
-            if (!playerScoreCards.empty()) {
-                playerScoreCards.clear();
-            }
-            playerScoreCards = playerScore[i]->playerCards;
-            for (int j = 0; j < playerScoreCards.size(); j++) {
-                scoresFile << playerScoreCards[j]->number << ",";
-            }
-            scoresFile << std::endl;
-            for (int j = 0; j < playerScoreCards.size(); j++) {
-                scoresFile << playerScoreCards[j]->color << ",";
-            }
-            scoresFile << std::endl;
-        }
-        scoresFile << actualPlaceDeck[0]->number << std::endl;
-        scoresFile << actualPlaceDeck[0]->color << std::endl;
-
-        if (actualPlaceDeck[0]->color == "schwarz")
-        {
-            scoresFile << wishedColorSave << std::endl;
-        }
-
-        for (int i = 0; i < actualDrawDeck.size(); i++) {
-            scoresFile << actualDrawDeck[i]->number << ",";
-        }
-        scoresFile << std::endl;
-        for (int i = 0; i < actualDrawDeck.size(); i++) {
-            scoresFile << actualDrawDeck[i]->color << ",";
-        }
-        scoresFile << std::endl;
-
-        scoresFile.close();
+        scoresFile.open("./savegames/savegame2.txt");
         break;
     default:
         std::cout << "Can´t open file." << std::endl;
         break;
     }
 
+    //Angaben, wie viele Zeilen vorhanden sind
+    lines = playerAmountSave + 2;
+
+    scoresFile << lines << std::endl;
+
+    //Speichern der Playerinfo
+    for (int i = 0; i < playerAmountSave; i++) {
+        scoresFile << playerScore[i]->id << std::endl;
+        scoresFile << playerScore[i]->bot << std::endl;
+        scoresFile << playerScore[i]->name << std::endl;
+        scoresFile << playerScore[i]->laidCards << std::endl;
+        scoresFile << playerScore[i]->hasPlusTwo << std::endl;
+        std::vector<Card*> playerScoreCards;
+        if (!playerScoreCards.empty()) {
+            playerScoreCards.clear();
+        }
+        playerScoreCards = playerScore[i]->playerCards;
+        for (int j = 0; j < playerScoreCards.size(); j++) {
+            scoresFile << playerScoreCards[j]->number << ",";
+        }
+        scoresFile << std::endl;
+        for (int j = 0; j < playerScoreCards.size(); j++) {
+            scoresFile << playerScoreCards[j]->color << ",";
+        }
+        scoresFile << std::endl;
+    }
+
+    //Speichern des Legestapels
+    scoresFile << actualPlaceDeck[0]->number << std::endl;
+    scoresFile << actualPlaceDeck[0]->color << std::endl;
+    if (actualPlaceDeck[0]->color == "schwarz")
+    {
+        scoresFile << wishedColorSave << std::endl;
+    }
+
+    //Speichern des Ziehstapels
+    for (int i = 0; i < actualDrawDeck.size(); i++) {
+        scoresFile << actualDrawDeck[i]->number << ",";
+    }
+    scoresFile << std::endl;
+    for (int i = 0; i < actualDrawDeck.size(); i++) {
+        scoresFile << actualDrawDeck[i]->color << ",";
+    }
+    scoresFile << std::endl;
+
+    //Speichern der PlayerID des Spielers der nach dem Speichern folgen würde
+    scoresFile << actualPlayerID << std::endl;
+
+    //Speichern ob Specialrules aktiviert sind
+    scoresFile << rulesActive << std::endl;
+
+    scoresFile.close();
 }
 
 void loadGame() {
@@ -1653,8 +1605,8 @@ void readScore(int selection) {
     if (!cardColor.empty()) {
         cardColor.clear();
     }
-    if (!cardNumnber.empty()) {
-        cardNumnber.clear();
+    if (!cardNumber.empty()) {
+        cardNumber.clear();
     }
 
 
@@ -1668,385 +1620,173 @@ void readScore(int selection) {
     {
     case 1:
         readScore.open("./savegames/savegame1.txt");
-        if (readScore.is_open()) {
-
-            //Spieleranzahl ermitteln
-            getline(readScore, reading);
-            int players = atoi(reading.c_str());
-            players = players - 2;
-
-            int id;
-            std::string name;
-            std::string line;
-            std::string delimiter_char = ",";
-            std::string token;
-            size_t pos = 0;
-
-            for (int i = 0; i < players; i++)
-            {
-                Player* player = new Player;
-                Card* card = new Card;
-                getline(readScore, reading);
-                id = atoi(reading.c_str());
-                getline(readScore, reading);
-                name = reading;
-                player->id = id;
-                player->name = name;
-
-
-
-                //Lesen der Karteninformationen für den Spieler 0
-                //Lesen der Kartennummern
-                getline(readScore, line);
-                while ((pos = line.find(delimiter_char)) != std::string::npos) {
-                    token = line.substr(0, pos);
-                    //einzelne Teile des gelesenen und aufgeteilten
-                    int number = atoi(token.c_str());
-                    cardNumnber.push_back(number);
-                    line.erase(0, pos + delimiter_char.length());
-                }
-                //Lesen der Kartenfarbe
-                getline(readScore, line);
-                while ((pos = line.find(delimiter_char)) != std::string::npos) {
-                    token = line.substr(0, pos);
-                    cardColor.push_back(token);
-                    line.erase(0, pos + delimiter_char.length());
-                }
-                //Speichern der Farbe und Nummer in playerDeckLoad
-                for (int i = 0; i < cardNumnber.size(); i++) {
-                    card = new Card;
-                    card->color = cardColor[i];
-                    card->number = cardNumnber[i];
-                    playerDeckLoad.push_back(card);
-                }
-                //Speichern der Spieler
-                player->playerCards = playerDeckLoad;
-                playerScoreLoad.push_back(player);
-
-                //Bevor der nächste Spieler eingelesen werden kann, muss jeder Vektor gecleart werden
-                if (!playerDeckLoad.empty()) {
-                    playerDeckLoad.clear();
-                }
-                if (!cardColor.empty()) {
-                    cardColor.clear();
-                }
-                if (!cardNumnber.empty()) {
-                    cardNumnber.clear();
-                }
-            }
-
-            if (!cardColor.empty()) {
-                cardColor.clear();
-            }
-            if (!cardNumnber.empty()) {
-                cardNumnber.clear();
-            }
-            if (!drawDeckLoad.empty()) {
-                drawDeckLoad.clear();
-            }
-
-            //Placedeck
-            //Lesen der Kartennummern
-            Card* card = new Card;
-            getline(readScore, line);
-            int number = atoi(line.c_str());
-            card->number = number;
-            //Lesen der Kartenfarbe
-            getline(readScore, line);
-            card->color = line;
-            placeDeckLoad.push_back(card);
-
-            //Wunschfarbe
-            if (card->color == "schwarz")
-            {
-                getline(readScore, line);
-                wishedColorSave = line;
-            }
-
-            //Drawdeck
-            //Lesen der Kartennummern
-            getline(readScore, line);
-            while ((pos = line.find(delimiter_char)) != std::string::npos) {
-                token = line.substr(0, pos);
-                int number = atoi(token.c_str());
-                cardNumnber.push_back(number);
-                line.erase(0, pos + delimiter_char.length());
-            }
-            //Lesen der Kartenfarbe
-            getline(readScore, line);
-            while ((pos = line.find(delimiter_char)) != std::string::npos) {
-                token = line.substr(0, pos);
-                cardColor.push_back(token);
-                line.erase(0, pos + delimiter_char.length());
-            }
-
-            for (int i = 0; i < cardNumnber.size(); i++) {
-                Card* card = new Card;
-                card->color = cardColor[i];
-                card->number = cardNumnber[i];
-                drawDeckLoad.push_back(card);
-            }
-
-        }
-        readScore.close();
-
-
         break;
-    case 2: readScore.open("./savegames/savegame2.txt");
-        if (readScore.is_open()) {
-
-            //Spieleranzahl ermitteln
-            getline(readScore, reading);
-            int players = atoi(reading.c_str());
-            players = players - 2;
-
-            int id;
-            std::string name;
-            std::string line;
-            std::string delimiter_char = ",";
-            std::string token;
-            size_t pos = 0;
-
-            for (int i = 0; i < players; i++)
-            {
-                Player* player = new Player;
-                Card* card = new Card;
-                getline(readScore, reading);
-                id = atoi(reading.c_str());
-                getline(readScore, reading);
-                name = reading;
-                player->id = id;
-                player->name = name;
-
-
-
-                //Lesen der Karteninformationen für den Spieler 0
-                //Lesen der Kartennummern
-                getline(readScore, line);
-                while ((pos = line.find(delimiter_char)) != std::string::npos) {
-                    token = line.substr(0, pos);
-                    //einzelne Teile des gelesenen und aufgeteilten
-                    int number = atoi(token.c_str());
-                    cardNumnber.push_back(number);
-                    line.erase(0, pos + delimiter_char.length());
-                }
-                //Lesen der Kartenfarbe
-                getline(readScore, line);
-                while ((pos = line.find(delimiter_char)) != std::string::npos) {
-                    token = line.substr(0, pos);
-                    cardColor.push_back(token);
-                    line.erase(0, pos + delimiter_char.length());
-                }
-                //Speichern der Farbe und Nummer in playerDeckLoad
-                for (int i = 0; i < cardNumnber.size(); i++) {
-                    card = new Card;
-                    card->color = cardColor[i];
-                    card->number = cardNumnber[i];
-                    playerDeckLoad.push_back(card);
-                }
-                //Speichern der Spieler
-                player->playerCards = playerDeckLoad;
-                playerScoreLoad.push_back(player);
-
-                //Bevor der nächste Spieler eingelesen werden kann, muss jeder Vektor gecleart werden
-                if (!playerDeckLoad.empty()) {
-                    playerDeckLoad.clear();
-                }
-                if (!cardColor.empty()) {
-                    cardColor.clear();
-                }
-                if (!cardNumnber.empty()) {
-                    cardNumnber.clear();
-                }
-            }
-
-            if (!cardColor.empty()) {
-                cardColor.clear();
-            }
-            if (!cardNumnber.empty()) {
-                cardNumnber.clear();
-            }
-            if (!drawDeckLoad.empty()) {
-                drawDeckLoad.clear();
-            }
-            //Placedeck
-            //Lesen der Kartennummern
-            Card* card = new Card;
-            getline(readScore, line);
-            int number = atoi(line.c_str());
-            card->number = number;
-            //Lesen der Kartenfarbe
-            getline(readScore, line);
-            card->color = line;
-            placeDeckLoad.push_back(card);
-
-            //Wunschfarbe
-            if (card->color == "schwarz")
-            {
-                getline(readScore, line);
-                wishedColorSave = line;
-            }
-
-            //Drawdeck
-            //Lesen der Kartennummern
-            getline(readScore, line);
-            while ((pos = line.find(delimiter_char)) != std::string::npos) {
-                token = line.substr(0, pos);
-                int number = atoi(token.c_str());
-                cardNumnber.push_back(number);
-                line.erase(0, pos + delimiter_char.length());
-            }
-            //Lesen der Kartenfarbe
-            getline(readScore, line);
-            while ((pos = line.find(delimiter_char)) != std::string::npos) {
-                token = line.substr(0, pos);
-                cardColor.push_back(token);
-                line.erase(0, pos + delimiter_char.length());
-            }
-
-            for (int i = 0; i < cardNumnber.size(); i++) {
-                Card* card = new Card;
-                card->color = cardColor[i];
-                card->number = cardNumnber[i];
-                drawDeckLoad.push_back(card);
-            }
-        }
-        readScore.close();
+    case 2:
+        readScore.open("./savegames/savegame2.txt");
         break;
     case 3:
-        readScore.open("./savegames/savegame3.txt");
-        if (readScore.is_open()) {
-
-            //Spieleranzahl ermitteln
-            getline(readScore, reading);
-            int players = atoi(reading.c_str());
-            players = players - 2;
-
-            int id;
-            std::string name;
-            std::string line;
-            std::string delimiter_char = ",";
-            std::string token;
-            size_t pos = 0;
-
-            for (int i = 0; i < players; i++)
-            {
-                Player* player = new Player;
-                Card* card = new Card;
-                getline(readScore, reading);
-                id = atoi(reading.c_str());
-                getline(readScore, reading);
-                name = reading;
-                player->id = id;
-                player->name = name;
-
-
-
-                //Lesen der Karteninformationen für den Spieler 0
-                //Lesen der Kartennummern
-                getline(readScore, line);
-                while ((pos = line.find(delimiter_char)) != std::string::npos) {
-                    token = line.substr(0, pos);
-                    //einzelne Teile des gelesenen und aufgeteilten
-                    int number = atoi(token.c_str());
-                    cardNumnber.push_back(number);
-                    line.erase(0, pos + delimiter_char.length());
-                }
-                //Lesen der Kartenfarbe
-                getline(readScore, line);
-                while ((pos = line.find(delimiter_char)) != std::string::npos) {
-                    token = line.substr(0, pos);
-                    cardColor.push_back(token);
-                    line.erase(0, pos + delimiter_char.length());
-                }
-                //Speichern der Farbe und Nummer in playerDeckLoad
-                for (int i = 0; i < cardNumnber.size(); i++) {
-                    card = new Card;
-                    card->color = cardColor[i];
-                    card->number = cardNumnber[i];
-                    playerDeckLoad.push_back(card);
-                }
-                //Speichern der Spieler
-                player->playerCards = playerDeckLoad;
-                playerScoreLoad.push_back(player);
-
-                //Bevor der nächste Spieler eingelesen werden kann, muss jeder Vektor gecleart werden
-                if (!playerDeckLoad.empty()) {
-                    playerDeckLoad.clear();
-                }
-                if (!cardColor.empty()) {
-                    cardColor.clear();
-                }
-                if (!cardNumnber.empty()) {
-                    cardNumnber.clear();
-                }
-            }
-
-            if (!cardColor.empty()) {
-                cardColor.clear();
-            }
-            if (!cardNumnber.empty()) {
-                cardNumnber.clear();
-            }
-            if (!drawDeckLoad.empty()) {
-                drawDeckLoad.clear();
-            }
-            //Placedeck
-            //Lesen der Kartennummern
-            Card* card = new Card;
-            getline(readScore, line);
-            int number = atoi(line.c_str());
-            card->number = number;
-            //Lesen der Kartenfarbe
-            getline(readScore, line);
-            card->color = line;
-            placeDeckLoad.push_back(card);
-
-            //Wunschfarbe
-            if (card->color == "schwarz")
-            {
-                getline(readScore, line);
-                wishedColorSave = line;
-            }
-
-            //Drawdeck
-            //Lesen der Kartennummern
-            getline(readScore, line);
-            while ((pos = line.find(delimiter_char)) != std::string::npos) {
-                token = line.substr(0, pos);
-                int number = atoi(token.c_str());
-                cardNumnber.push_back(number);
-                line.erase(0, pos + delimiter_char.length());
-            }
-            //Lesen der Kartenfarbe
-            getline(readScore, line);
-            while ((pos = line.find(delimiter_char)) != std::string::npos) {
-                token = line.substr(0, pos);
-                cardColor.push_back(token);
-                line.erase(0, pos + delimiter_char.length());
-            }
-
-            for (int i = 0; i < cardNumnber.size(); i++) {
-                Card* card = new Card;
-                card->color = cardColor[i];
-                card->number = cardNumnber[i];
-                drawDeckLoad.push_back(card);
-            }
-        }
-        readScore.close();
+        readScore.open("./savegames/savegame2.txt");
         break;
     default:
         std::cout << "Can´t open file." << std::endl;
         break;
     }
+    if (readScore.is_open()) {
 
-    chooseRules(rules);
-    game(drawDeckLoad, placeDeckLoad, playerScoreLoad, rules, wishedColorSave);
+        //Spieleranzahl ermitteln
+        getline(readScore, reading);
+        int players = atoi(reading.c_str());
+        players = players - 2;
+
+        int id;
+        bool bot;
+        int laidCards;
+        int plusTwo;
+        std::string botstate;
+        std::string name;
+        std::string line;
+        std::string delimiter_char = ",";
+        std::string token;
+        size_t pos = 0;
+
+        for (int i = 0; i < players; i++)
+        {
+            //Lesen der Spielerinformationen
+            Player* player = new Player;
+            Card* card = new Card;
+            getline(readScore, reading);
+            id = atoi(reading.c_str());
+            player->id = id;
+            getline(readScore, reading);
+            botstate = reading;
+            player->bot = resolve(botstate);
+            getline(readScore, reading);
+            name = reading;
+            player->name = name;
+            getline(readScore, reading);
+            laidCards = atoi(reading.c_str());
+            player->id = laidCards;
+            getline(readScore, reading);
+            plusTwo = atoi(reading.c_str());
+            player->hasPlusTwo = plusTwo;
+            plustwoLoad = plusTwo;
+
+            //Lesen der Karteninformationen für den Spieler 0
+            //Lesen der Kartennummern
+            getline(readScore, line);
+            while ((pos = line.find(delimiter_char)) != std::string::npos) {
+                token = line.substr(0, pos);
+                //einzelne Teile des gelesenen und aufgeteilten
+                int number = atoi(token.c_str());
+                cardNumber.push_back(number);
+                line.erase(0, pos + delimiter_char.length());
+            }
+            //Lesen der Kartenfarbe
+            getline(readScore, line);
+            while ((pos = line.find(delimiter_char)) != std::string::npos) {
+                token = line.substr(0, pos);
+                cardColor.push_back(token);
+                line.erase(0, pos + delimiter_char.length());
+            }
+            //Speichern der Farbe und Nummer in playerDeckLoad
+            for (int i = 0; i < cardNumber.size(); i++) {
+                card = new Card;
+                card->color = cardColor[i];
+                card->number = cardNumber[i];
+                playerDeckLoad.push_back(card);
+            }
+            //Speichern der Spieler
+            player->playerCards = playerDeckLoad;
+            playerScoreLoad.push_back(player);
+
+            //Bevor der nächste Spieler eingelesen werden kann, muss jeder Vektor gecleart werden
+            if (!playerDeckLoad.empty()) {
+                playerDeckLoad.clear();
+            }
+            if (!cardColor.empty()) {
+                cardColor.clear();
+            }
+            if (!cardNumber.empty()) {
+                cardNumber.clear();
+            }
+        }
+
+        if (!cardColor.empty()) {
+            cardColor.clear();
+        }
+        if (!cardNumber.empty()) {
+            cardNumber.clear();
+        }
+        if (!drawDeckLoad.empty()) {
+            drawDeckLoad.clear();
+        }
+
+        //Placedeck
+        //Lesen der Kartennummern
+        Card* card = new Card;
+        getline(readScore, line);
+        int number = atoi(line.c_str());
+        card->number = number;
+        //Lesen der Kartenfarbe
+        getline(readScore, line);
+        card->color = line;
+        placeDeckLoad.push_back(card);
+
+        //Wunschfarbe
+        if (card->color == "schwarz")
+        {
+            getline(readScore, line);
+            wishedColorSave = line;
+        }
+
+        //Drawdeck
+        //Lesen der Kartennummern
+        getline(readScore, line);
+        while ((pos = line.find(delimiter_char)) != std::string::npos) {
+            token = line.substr(0, pos);
+            int number = atoi(token.c_str());
+            cardNumber.push_back(number);
+            line.erase(0, pos + delimiter_char.length());
+        }
+        //Lesen der Kartenfarbe
+        getline(readScore, line);
+        while ((pos = line.find(delimiter_char)) != std::string::npos) {
+            token = line.substr(0, pos);
+            cardColor.push_back(token);
+            line.erase(0, pos + delimiter_char.length());
+        }
+
+        //Füllen des Ziehstapels
+        for (int i = 0; i < cardNumber.size(); i++) {
+            Card* card = new Card;
+            card->color = cardColor[i];
+            card->number = cardNumber[i];
+            drawDeckLoad.push_back(card);
+        }
+
+        //Lesen der PlayerID für ersten Spieler nach dem Laden
+        getline(readScore, line);
+        int pID = atoi(line.c_str());
+        startPlayerID = pID;
+
+        //Lesen ob special rules aktiv sind
+        getline(readScore, reading);
+        std::string rules = reading;
+        rulesActive = resolve(rules);
+
+    }
+    readScore.close();
+    if (rulesActive) {
+        std::cout << "============================" << std::endl;
+        std::cout << "special rules sind aktiviert" << std::endl;
+        std::cout << "============================" << std::endl;
+    }
+    game(drawDeckLoad, placeDeckLoad, playerScoreLoad, rulesActive, wishedColorSave);
 }
 
 void printCard(Card* card)
 {
-    std::fstream f;
+    std::ifstream f;
     char cstring[256];
     f.open("Cards.txt", std::ios::in);
 
@@ -2111,6 +1851,17 @@ void printPlayerCards(Player* player)
         }
         std::cout << std::endl;
     }
+}
+
+bool resolve(std::string in) {
+    bool op;
+    if (in == "1") {
+        op = true;
+    }
+    else if (in == "0") {
+        op = false;
+    }
+    return op;
 }
 
 void drawLine(Player* player)
