@@ -4,7 +4,7 @@ Card Game UNO by Fabian Eilber, Tobias Hahn and Fabian Unger.
 
 Was ist enthalten?
   - UNO Spiellogik
-  - Einzespieler-Modus gegen maximal 3 Bots
+  - Einzelspieler-Modus gegen maximal 3 Bots
   - Mehrspieler-Modus mit maximal 4 Spielern
   - Runden während dem Spielen speichern
   - Punktesystem mit der Möglichkeit, die erreichten Punkte am Ende der Runde abzuspeichern
