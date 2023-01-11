@@ -23,11 +23,8 @@ public:
 
 void intro();
 void menu();
-void changeRules();
 void showRules();
 void startGame(bool multiplayer);
-void startSingleplayer();
-void startMultiplayer();
 void createPlayers(std::vector<Player*>& players, bool multiplayer);
 int selectPlayerAmount();
 void showRanking();
@@ -37,8 +34,6 @@ void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players
 void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck);
 void chooseRules(bool& specialRules);
 void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players, bool& specialRules, std::string& wishedColor);
-void singleplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players, bool specialRules);
-void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players, bool specialRules);
 void showPlaceDeck(std::vector<Card*>& placeDeck, std::string wishedColor);
 void confirmNextPlayer(Player* player);
 Card* selectCardBOT(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player, std::string wishedColor);
