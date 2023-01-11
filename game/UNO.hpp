@@ -55,7 +55,7 @@ void shuffleDeck(std::vector<Card*>& deck);
 void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players);
 void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck);
 void chooseRules(bool& specialRules);
-void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players, bool& specialRules);
+void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players, bool& specialRules, std::string& wishedColor);
 void singleplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players, bool specialRules);
 void multiplayerGame(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players, bool specialRules);
 void showPlaceDeck(std::vector<Card*>& placeDeck, std::string wishedColor);
@@ -75,12 +75,22 @@ void safeScore(Player* player);
 void writeScore(int selection);
 void loadGame();
 void readScore(int selection);
+void printPlayerCards(Player* player);
+void printCard(Card* card);
 void clearScreen();
 
 //Spielstandspeicherung
 int playerAmountSave;
+std::string wishedColorSave;
 std::vector<Card*> actualPlaceDeck;
 std::vector<Player*> playerScore;
 std::vector<Card*> actualDrawDeck;
 
+//Spielstand laden
+std::vector<Card*> placeDeckLoad;
+std::vector<Card*> playerDeckLoad;
+std::vector<Card*> drawDeckLoad;
+std::vector<Player*> playerScoreLoad;
+std::vector<int> cardNumnber;
+std::vector<std::string> cardColor;
 #endif
