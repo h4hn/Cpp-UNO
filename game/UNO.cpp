@@ -997,6 +997,7 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
             }
         }
     }
+    return NULL;
 }
 
 void drawCard(std::vector<Card*>& drawDeck, Player* player)
