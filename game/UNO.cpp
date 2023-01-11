@@ -183,14 +183,6 @@ void createCards(std::vector<Card*>& drawDeck)
             Card* card = new Card;
             card->color = "rot";
             card->number = j;
-            if (j < 10)
-            {
-                card->points = j;
-            }
-            else
-            {
-                card->points = 20;
-            }
             drawDeck.push_back(card);
         }
     }
@@ -202,14 +194,6 @@ void createCards(std::vector<Card*>& drawDeck)
             Card* card = new Card;
             card->color = "blau";
             card->number = j;
-            if (j < 10)
-            {
-                card->points = j;
-            }
-            else
-            {
-                card->points = 20;
-            }
             drawDeck.push_back(card);
         }
     }
@@ -221,14 +205,6 @@ void createCards(std::vector<Card*>& drawDeck)
             Card* card = new Card;
             card->color = "gelb";
             card->number = j;
-            if (j < 10)
-            {
-                card->points = j;
-            }
-            else
-            {
-                card->points = 20;
-            }
             drawDeck.push_back(card);
         }
     }
@@ -240,14 +216,6 @@ void createCards(std::vector<Card*>& drawDeck)
             Card* card = new Card;
             card->color = "gruen";
             card->number = j;
-            if (j < 10)
-            {
-                card->points = j;
-            }
-            else
-            {
-                card->points = 20;
-            }
             drawDeck.push_back(card);
         }
     }
@@ -259,7 +227,6 @@ void createCards(std::vector<Card*>& drawDeck)
             Card* card = new Card;
             card->color = "schwarz";
             card->number = i;				// Wenn schwarz Nummer 1 hat --> +4 Karte
-            card->points = 50;
             drawDeck.push_back(card);
         }
     }
@@ -284,18 +251,6 @@ void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players
             player->playerCards.push_back(drawnCard);
         }
     }
-
-    /*
-    // Alle Karten der jeweiligen Spieler zeigen
-    for (Player* player : players)
-    {
-        for (Card* card : player->playerCards)
-        {
-            std::cout << card->color << " + " << card->number << std::endl;
-        }
-        std::cout << std::endl;
-    }
-    */
 }
 
 std::string getCardInfo(Card* card)
@@ -428,7 +383,7 @@ std::string getCardInfo(Card* card)
             break;
         case 9: cardInfo = "Gelbe 9";
             break;
-        case 10: cardInfo = "Gelbe \"Aussetzen\"- Karte";
+        case 10: cardInfo = "Gelbe \"Aussetzen\"-Karte";
             break;
         case 11: cardInfo = "Gelbe \"Richtungswechsel\"-Karte";
             break;
@@ -543,7 +498,8 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                 for (int i = 0; i < players.size(); i++) {
                     playerScore.push_back(players[i]);
                 }
-                std::cout << "Aktueller Spieler: " << currentPlayer->name << std::endl << std::endl;
+                drawLine(currentPlayer);
+                std::cout << "Aktueller Spieler: " << currentPlayer->name << std::endl;
             }
 
 
@@ -583,10 +539,10 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                         {
                             //Legt die +2-Karte
                             placeCardByPlayer(drawDeck, placeDeck, plusTwoCard);
-                            currentPlayer->score += plusTwoCard->points;
                             currentPlayer->playerCards.erase(currentPlayer->playerCards.begin() + plusTwoIndex);
                             plustwo += 2;
                             std::cout << currentPlayer->name << " hat eine " << getCardInfo(plusTwoCard) << " gelegt." << std::endl << std::endl;
+                            currentPlayer->laidCards++;
                         }
                         else
                         {
@@ -618,8 +574,8 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                         {
                             wishedColor = "";
                             placeCardByPlayer(drawDeck, placeDeck, selectedCard);
-                            currentPlayer->score += selectedCard->points;
                             executeAction(selectedCard, reverse, skip, plustwo, plusfour, wishedColor, currentPlayer, specialRules, players);
+                            currentPlayer->laidCards++;
                             std::cout << currentPlayer->name << " hat eine " << getCardInfo(selectedCard) << " gelegt." << std::endl;
                             if (selectedCard->color == "schwarz")
                             {
@@ -677,9 +633,9 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                             if (choice == 'y')
                             {
                                 placeCardByPlayer(drawDeck, placeDeck, plusTwoCard);
-                                currentPlayer->score += plusTwoCard->points;
                                 currentPlayer->playerCards.erase(currentPlayer->playerCards.begin() + plusTwoIndex);
                                 plustwo += 2;
+                                currentPlayer->laidCards++;
                             }
                             else if (choice == 'n')
                             {
@@ -722,8 +678,8 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                         {
                             wishedColor = "";
                             placeCardByPlayer(drawDeck, placeDeck, selectedCard);
-                            currentPlayer->score += selectedCard->points;
                             executeAction(selectedCard, reverse, skip, plustwo, plusfour, wishedColor, currentPlayer, specialRules, players);
+                            currentPlayer->laidCards++;
                         }
                     }
                 }
@@ -733,6 +689,21 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
             {
                 ranking.push_back(currentPlayer);
                 std::cout << currentPlayer->name << " ist fertig. Er belegt den " << ranking.size() << ". Platz" << std::endl;
+
+                int a = currentPlayer->laidCards;
+                int b = 0;
+                for (Player* _player : players)
+                {
+                    if (_player != currentPlayer)
+                    {
+                        b += _player->playerCards.size();
+                    }
+                }
+
+
+                int newScore = (1 / a) * 2000 + b;
+
+                currentPlayer->score = newScore;
             }
         }
 
@@ -761,6 +732,8 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                 if (lastPlayer->playerCards.size() != 0)
                 {
                     ranking.push_back(lastPlayer);
+                    int a = lastPlayer->laidCards;
+                    lastPlayer->score = (1 / a) * 2000;
                 }
             }
         }
@@ -817,17 +790,13 @@ void confirmNextPlayer(Player* player)
 void showPlaceDeck(std::vector<Card*>& placeDeck, std::string wishedColor)
 {
     std::string shownCard = getCardInfo(placeDeck.front());
-    for (int i = 0; i < 50 + shownCard.length(); i++) std::cout << "=";
-    std::cout << std::endl;
-    std::cout << "Die aktuell oberste Karte auf dem Legestapel ist: " << shownCard << std::endl << std::endl;
+
+    std::cout << "Die aktuell oberste Karte auf dem Legestapel ist: " << shownCard << std::endl;
+    printCard(placeDeck.front());
     if (wishedColor != "")
     {
-        std::cout << "Es wurde sich die Farbe " << wishedColor << " gewuenscht." << std::endl << std::endl;
+        std::cout << std::endl << "Es wurde sich die Farbe " << wishedColor << " gewuenscht." << std::endl;
     }
-    printCard(placeDeck.front());
-    for (int i = 0; i < 50 + shownCard.length(); i++) std::cout << "=";
-    std::cout << std::endl;
-
 }
 
 Card* selectCardBOT(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player, std::string wishedColor)
@@ -930,9 +899,12 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
     int selection;
     while (!correctInput)
     {
+        drawLine(player);
         showPlaceDeck(placeDeck, wishedColor);
+        drawLine(player);
         std::cout << "Deine Karten: " << std::endl;
         printPlayerCards(player);
+        drawLine(player);
         std::cout << "Bitte waehle die Karte, die gelegt werden soll." << std::endl;
         int index = 0;
         for (Card* card : player->playerCards)
@@ -974,7 +946,8 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
             drawCard(drawDeck, player);
             cardDrawn = true;
             clearScreen();
-            std::cout << "Aktueller Spieler: " << player->name << std::endl << std::endl;
+            drawLine(player);
+            std::cout << "Aktueller Spieler: " << player->name << std::endl;
             continue;
         }
         else if (selection == player->playerCards.size() + 1 && cardDrawn)
@@ -1000,7 +973,8 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
                 std::cout << "Diese Karte kann nicht auf der Karte, die auf dem Ablegestapel liegt, abgelegt werden." << std::endl;
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Aktueller Spieler: " << player->name << std::endl << std::endl;
+                drawLine(player);
+                std::cout << "Aktueller Spieler: " << player->name << std::endl;
             }
             else
             {
@@ -2106,6 +2080,15 @@ void printPlayerCards(Player* player)
         }
         std::cout << std::endl;
     }
+}
+
+void drawLine(Player* player)
+{
+    int cards = player->playerCards.size();
+    int linelength = 13 * cards - 1;
+
+    for (int i = 0; i < linelength; i++) std::cout << "=";
+    std::cout << std::endl;
 }
 
 void clearScreen()
