@@ -17,12 +17,19 @@ Spielen:
     - Gewinner ist derjenige, der als erster alle Karten abgelegt hat.
 
 Punktesystem:
-    - Wie viel Punkte ein Spieler erhaelt, haengt von den folgenden Punkten
+    - Das Punktesystem dient dazu, unterschiedliche Rundern und Spieler
+      miteinander vergleichen zu koennen.
+    - Wie viel Punkte ein Spieler erhaelt, haengt von den folgenden Aspekten
       ab: 
         - Wie viele Karten er gelegt hat, bis er beendet hat.
         - Wie viele Karten die anderen Spieler noch hatten, als er seine
           letzte Karte abgelegt hat.
-          
+    - Berechnung der erreichten Punktzahl:
+        a = Anzahl der Karten, die man in der Runde gelegt hat.
+        b = Anzahl der Karten, die die anderen Spieler haben, wenn man beendet.
+        p = Punktzahl
+        
+        --> p = (1/a)*2000 + b
 
 Aktionskarten:
     - Legt ein Spieler eine "Zwei Ziehen"-Karte, muss der naechste Spieler
