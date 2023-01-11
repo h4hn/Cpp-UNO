@@ -6,7 +6,6 @@ class Card
 public:
     int number;
     std::string color;
-    // Destruktor?
 };
 
 class Player
@@ -18,7 +17,6 @@ public:
     std::vector<Card*> playerCards;
     int laidCards;
     int score;
-    // Destruktor?
 };
 
 void intro();
