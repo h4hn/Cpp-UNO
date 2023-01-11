@@ -16,6 +16,7 @@ public:
     std::string name;
     std::vector<Card*> playerCards;
     int laidCards;
+    int hasPlusTwo;
     int score;
 };
 
@@ -51,10 +52,15 @@ void loadGame();
 void readScore(int selection);
 void printPlayerCards(Player* player);
 void printCard(Card* card);
+bool resolve(std::string in);
 void drawLine(Player* player);
 void clearScreen();
 
 //Spielstandspeicherung
+int startPlayerID;
+int actualPlayerID;
+int plustwoLoad;
+bool rulesActive;
 int playerAmountSave;
 std::string wishedColorSave;
 std::vector<Card*> actualPlaceDeck;
@@ -66,6 +72,6 @@ std::vector<Card*> placeDeckLoad;
 std::vector<Card*> playerDeckLoad;
 std::vector<Card*> drawDeckLoad;
 std::vector<Player*> playerScoreLoad;
-std::vector<int> cardNumnber;
+std::vector<int> cardNumber;
 std::vector<std::string> cardColor;
 #endif
