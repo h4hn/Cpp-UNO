@@ -1366,7 +1366,7 @@ void saveScores(std::vector<Player*>& players)
         int MAX_POINTS = 0;
 
         std::string line;
-        std::ifstream scoreFileRead("scores.txt");
+        std::ifstream scoreFileRead("Scores.txt");
         if (scoreFileRead.is_open())
         {
             while (getline(scoreFileRead, line))
@@ -1398,7 +1398,7 @@ void saveScores(std::vector<Player*>& players)
         }
 
         std::ofstream scoreFileWrite;
-        scoreFileWrite.open("scores.txt");
+        scoreFileWrite.open("Scores.txt");
         if (scoreFileWrite.is_open())
         {
             for (int i = MAX_POINTS; i >= 0; i--)
@@ -1422,7 +1422,7 @@ void showRanking()
     int MAX_POINTS = 0;
 
     std::string line;
-    std::ifstream scoreFileRead("scores.txt");
+    std::ifstream scoreFileRead("Scores.txt");
     if (scoreFileRead.is_open())
     {
         while (getline(scoreFileRead, line))
