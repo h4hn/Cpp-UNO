@@ -90,6 +90,17 @@ void showRules()
 
 void startGame(bool multiplayer)
 {
+    clearScreen();
+    if (multiplayer)
+    {
+        std::cout << "Multiplayer" << std::endl;
+        drawLine(NULL);
+    }
+    else
+    {
+        std::cout << "Singleplayer" << std::endl;
+        drawLine(NULL);
+    }
     std::vector<Card*> drawDeck;
     std::vector<Card*> placeDeck;
     std::vector<Player*> players;
@@ -121,7 +132,7 @@ void startGame(bool multiplayer)
 void createPlayers(std::vector<Player*>& players, bool multiplayer)
 {
     int numberOfPlayers = selectPlayerAmount();
-    std::cout << "Es spielen " << numberOfPlayers << " Spieler mit." << std::endl;
+    std::cout << "Es spielen " << numberOfPlayers << " Spieler mit." << std::endl << std::endl;
 
     if (multiplayer)
     {
@@ -447,7 +458,7 @@ void chooseRules(bool& specialRules)
     char choice;
     while (!correctInput)
     {
-        std::cout << "Moechtest du die 0-7-Regel aktivieren? (y|n)" << std::endl;
+        std::cout << std::endl << "Moechtest du die 0-7-Regel aktivieren? (y|n)" << std::endl;
         std::cin >> choice;
         if (choice == 'y' || choice == 'n')
         {
@@ -630,6 +641,9 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                             char choice;
                             while (!correctInput)
                             {
+                                drawLine(currentPlayer);
+                                showPlaceDeck(placeDeck, wishedColor);
+                                drawLine(currentPlayer);
                                 std::cout << "Moechtest du deine \"+2\"-Karte legen?" << std::endl
                                     << "Wenn nein, musst du " << plustwo << " Karten ziehen. [y|n]" << std::endl;
                                 std::cin >> choice;
@@ -639,8 +653,8 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                                 }
                                 else
                                 {
-                                    std::cout << "Bitte geben Sie y oder n ein." << std::endl;
                                     clearScreen();
+                                    std::cout << "Bitte geben Sie y oder n ein." << std::endl;
                                 }
                             }
                             if (choice == 'y')
@@ -658,6 +672,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                                 }
                                 plustwo = 0;
                             }
+                            clearScreen();
                         }
                         else
                         {
@@ -775,7 +790,7 @@ void confirmNextPlayer(Player* player)
     while (!correctInput)
     {
         std::string confirmPlayer;
-        std::cout << "Der naechste Spieler ist " << player->name << std::endl
+        std::cout << "Der naechste Spieler ist " << player->name << "." << std::endl << std::endl
             << "Bitte mit [y] bestaetigen, dass gewechselt werden kann." << std::endl
             << "Bitte mit [x] das Speichern des Spiels bestaetigen." << std::endl;
         std::cin >> confirmPlayer;
@@ -1209,13 +1224,15 @@ void wishColor(std::string& newColor, Player* player)
         bool correctInput = false;
         while (!correctInput)
         {
-            std::cout << "Das sind deine Karten: " << std::endl;
-
+            drawLine(player);
+            std::cout << "Deine Karten: " << std::endl;
+            printPlayerCards(player);
+            drawLine(player);
             for (Card* card : player->playerCards)
             {
-                std::cout << getCardInfo(card) << std::endl;
+                std::cout << " - " << getCardInfo(card) << std::endl;
             }
-
+            drawLine(player);
             std::cout << std::endl << "Bitte waehle die Farbe, die du dir wuenschst." << std::endl
                 << "[1]\tRot" << std::endl
                 << "[2]\tGruen" << std::endl
@@ -1228,10 +1245,10 @@ void wishColor(std::string& newColor, Player* player)
             }
             else
             {
+                clearScreen();
                 std::cout << "Bitte geben Sie eine gueltige Eingabe ein." << std::endl;
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                clearScreen();
             }
         }
         switch (selection)
@@ -1280,7 +1297,7 @@ void wishColor(std::string& newColor, Player* player)
         else if (choice == yellows) newColor = "gelb";
         wishedColorSave = newColor;
     }
-
+    clearScreen();
 }
 
 void backToMenu()
@@ -2098,21 +2115,29 @@ void printPlayerCards(Player* player)
 
 void drawLine(Player* player)
 {
-    int cards = player->playerCards.size();
-    int linelength = 13 * cards - 1;
+    if (player != NULL)
+    {
+        int cards = player->playerCards.size();
+        int linelength = 13 * cards - 1;
 
-    for (int i = 0; i < linelength; i++) std::cout << "=";
-    std::cout << std::endl;
+        for (int i = 0; i < linelength; i++) std::cout << "=";
+        std::cout << std::endl;
+    }
+    else
+    {
+        for (int i = 0; i < 50; i++) std::cout << "=";
+        std::cout << std::endl;
+    }
 }
 
 void clearScreen()
 {
-    std::cout << "\n\n\n\n";
+    //std::cout << "\n\n\n\n";
 
-    /*
+    
     for (int i = 0; i < 10; i++)
     {
         std::cout << "\n\n\n\n\n\n\n\n\n\n";
     }
-    */
+    
 }
