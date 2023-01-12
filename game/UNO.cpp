@@ -6,7 +6,8 @@
 #include <fstream>
 #include <string>
 #include <chrono>
-
+#include <iomanip>
+#include <ctime>
 
 #include "UNO.hpp"
 #include "CppRandom.hpp"
@@ -213,7 +214,7 @@ void menu()
         break;
     case 4: showRanking();
         break;
-    case 5: loadGame();
+    case 5: loadSaveGame();
         break;
     default:
         exit(3);
@@ -268,6 +269,7 @@ void startGame(bool multiplayer)
 
     startPlayerID = GetRandomNumberBetween(0, players.size() - 1);
     plustwoLoad = 0;
+    plusfourLoad = false;
 
     game(drawDeck, placeDeck, players, specialRules, colorWish);
 
@@ -498,7 +500,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
     bool skip = false;				            // number == 10
     bool reverse = false;			            // number == 11
     int plustwo = plustwoLoad;				    // number == 12
-    bool plusfour = false;			            // color == black && number == 1
+    bool plusfour = plusfourLoad;	            // color == black && number == 1
     std::string wishedColor = _wishedColor;	    // color == black
     // -------------------------
 
@@ -513,6 +515,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
             {
                 actualPlayerID = currentPlayerID;
                 players[currentPlayerID]->hasPlusTwo = plustwo;
+                players[currentPlayerID]->hasPlusFour = plusfour;
                 confirmNextPlayer(currentPlayer);
                 clearScreen();
                 //Speichern des aktuellen drawDecks
@@ -796,7 +799,7 @@ void confirmNextPlayer(Player* player)
 {
     // Erst zum naechsten Spieler wechseln, wenn er bereit ist, damit niemand anderes seine Karten sieht
     bool correctInput = false;
-    bool saveGame = false;
+    bool save = false;
     bool exitToMenu = false;
 
     while (!correctInput)
@@ -811,17 +814,17 @@ void confirmNextPlayer(Player* player)
         if (confirmPlayer == "y")
         {
             correctInput = true;
-            saveGame = false;
+            save = false;
             exitToMenu = false;
         }
         else if (confirmPlayer == "s") {
             correctInput = true;
-            saveGame = true;
+            save = true;
             exitToMenu = false;
         }
         else if (confirmPlayer == "x") {
             correctInput = true;
-            saveGame = false;
+            save = false;
             exitToMenu = true;
         }
         else
@@ -830,8 +833,8 @@ void confirmNextPlayer(Player* player)
         }
     }
 
-    if (saveGame) {
-        safeScore(player);
+    if (save) {
+        saveGame(player);
         menu();
     }
     else if (exitToMenu) {
@@ -1372,6 +1375,13 @@ void saveScores(std::vector<Player*>& players)
     }
     if (selection == 'y')
     {
+        auto t = std::time(nullptr);
+        auto tm = *std::localtime(&t);
+
+        std::ostringstream oss;
+        oss << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
+        auto time = oss.str();
+
         std::map<int, std::string> ranking;
 
         std::string strSplitter = ";";
@@ -1404,15 +1414,8 @@ void saveScores(std::vector<Player*>& players)
                 {
                     MAX_POINTS = player->score;
                 }
-                std::string info = player->name;
-                if (ranking[player->score] != "")
-                {
-                    ranking[player->score] = ranking[player->score] + ", " + info;
-                }
-                else
-                {
-                    ranking[player->score] = info;
-                }
+                std::string info = player->name + " am " + time;
+                ranking[player->score] = info;
             }
         }
 
@@ -1477,7 +1480,7 @@ void showRanking()
     backToMenu();
 }
 
-void safeScore(Player* player) {
+void saveGame(Player* player) {
     int selection;
 
     std::cout
@@ -1491,11 +1494,11 @@ void safeScore(Player* player) {
 
     switch (selection)
     {
-    case 1: writeScore(selection);
+    case 1: writeSaveGame(selection);
         break;
-    case 2: writeScore(selection);
+    case 2: writeSaveGame(selection);
         break;
-    case 3: writeScore(selection);
+    case 3: writeSaveGame(selection);
         break;
     case 4: confirmNextPlayer(player);
         break;
@@ -1505,7 +1508,7 @@ void safeScore(Player* player) {
     }
 }
 
-void writeScore(int selection) {
+void writeSaveGame(int selection) {
     /*
         * Hier wird der aktuelle Spielstand gespeichert
         * Dazu werden Informationen ueber Spieler, deren Karten, der Karten in der Mitte und der Karten auf den Ziehstapel gesichert
@@ -1543,6 +1546,7 @@ void writeScore(int selection) {
         scoresFile << playerScore[i]->name << std::endl;
         scoresFile << playerScore[i]->laidCards << std::endl;
         scoresFile << playerScore[i]->hasPlusTwo << std::endl;
+        scoresFile << playerScore[i]->hasPlusFour << std::endl;
         std::vector<Card*> playerScoreCards;
         if (!playerScoreCards.empty()) {
             playerScoreCards.clear();
@@ -1585,7 +1589,7 @@ void writeScore(int selection) {
     scoresFile.close();
 }
 
-void loadGame() {
+void loadSaveGame() {
     bool correctInput = false;
     int selection;
     std::string sg1 = "./savegames/savegame1.txt";
@@ -1620,7 +1624,7 @@ void loadGame() {
         case 1:
             if (!fileEmpty(sg1))
             {
-                readScore(selection);
+                readSaveGame(selection);
                 correctInput = true;
             }
             else std::cout << "Spielstand leer. Waehle einen anderen aus.";
@@ -1628,7 +1632,7 @@ void loadGame() {
         case 2:
             if (!fileEmpty(sg2))
             {
-                readScore(selection);
+                readSaveGame(selection);
                 correctInput = true;
             }
             else std::cout << "Spielstand leer. Waehle einen anderen aus.";
@@ -1636,7 +1640,7 @@ void loadGame() {
         case 3:
             if (!fileEmpty(sg3))
             {
-                readScore(selection);
+                readSaveGame(selection);
                 correctInput = true;
             }
             else std::cout << "Spielstand leer. Waehle einen anderen aus.";
@@ -1657,7 +1661,7 @@ void loadGame() {
     }
 }
 
-void readScore(int selection) {
+void readSaveGame(int selection) {
 
     if (!playerDeckLoad.empty()) {
         playerDeckLoad.clear();
@@ -1705,6 +1709,7 @@ void readScore(int selection) {
         bool bot;
         int laidCards;
         int plusTwo;
+        bool plusFour;
         std::string botstate;
         std::string name;
         std::string line;
@@ -1716,23 +1721,31 @@ void readScore(int selection) {
         {
             //Lesen der Spielerinformationen
             Player* player = new Player;
-            Card* card = new Card;
+
             getline(readScore, reading);
             id = atoi(reading.c_str());
             player->id = id;
+            
             getline(readScore, reading);
             botstate = reading;
             player->bot = resolve(botstate);
+            
             getline(readScore, reading);
             name = reading;
             player->name = name;
+            
             getline(readScore, reading);
             laidCards = atoi(reading.c_str());
             player->id = laidCards;
+            
             getline(readScore, reading);
             plusTwo = atoi(reading.c_str());
             player->hasPlusTwo = plusTwo;
             plustwoLoad = plusTwo;
+            
+            getline(readScore, reading);
+            std::string hasPlusFour = reading;
+            player->hasPlusFour = resolve(hasPlusFour);
 
             //Lesen der Karteninformationen für den Spieler 0
             //Lesen der Kartennummern
@@ -1753,7 +1766,7 @@ void readScore(int selection) {
             }
             //Speichern der Farbe und Nummer in playerDeckLoad
             for (int i = 0; i < cardNumber.size(); i++) {
-                card = new Card;
+                Card* card = new Card;
                 card->color = cardColor[i];
                 card->number = cardNumber[i];
                 playerDeckLoad.push_back(card);
@@ -1761,17 +1774,6 @@ void readScore(int selection) {
             //Speichern der Spieler
             player->playerCards = playerDeckLoad;
             playerScoreLoad.push_back(player);
-
-            //Bevor der nächste Spieler eingelesen werden kann, muss jeder Vektor gecleart werden
-            if (!playerDeckLoad.empty()) {
-                playerDeckLoad.clear();
-            }
-            if (!cardColor.empty()) {
-                cardColor.clear();
-            }
-            if (!cardNumber.empty()) {
-                cardNumber.clear();
-            }
         }
 
         if (!cardColor.empty()) {
@@ -1844,7 +1846,17 @@ void readScore(int selection) {
         std::cout << "special rules sind aktiviert" << std::endl;
         std::cout << "============================" << std::endl;
     }
+
     game(drawDeckLoad, placeDeckLoad, playerScoreLoad, rulesActive, wishedColorSave);
+
+    for (Card* card : drawDeckLoad)
+    {
+        delete card;
+    }
+    for (Card* card : playerDeckLoad)
+    {
+        delete card;
+    }
 }
 
 void deleteSelection()
@@ -1897,7 +1909,7 @@ void deleteSelection()
         default:
             break;
         }
-        loadGame();
+        loadSaveGame();
     }
 }
 
