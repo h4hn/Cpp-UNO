@@ -301,6 +301,7 @@ void createPlayers(std::vector<Player*>& players, bool multiplayer)
             player->id = i - 1;
             player->name = name;
             player->bot = false;
+            player->laidCards = 0;
             players.push_back(player);
         }
     }
@@ -312,6 +313,7 @@ void createPlayers(std::vector<Player*>& players, bool multiplayer)
         std::cin >> name;
         player->name = name;
         player->bot = false;
+        player->laidCards = 0;
         players.push_back(player);
 
         for (int i = 2; i < numberOfPlayers + 1; i++)
@@ -321,6 +323,7 @@ void createPlayers(std::vector<Player*>& players, bool multiplayer)
             Player* player = new Player;
             player->name = name;
             player->bot = true;
+            player->laidCards = 0;
             players.push_back(player);
         }
     }
@@ -755,7 +758,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                     {
                         //Botlogik einbauen
                         Card* selectedCard = selectCardBOT(drawDeck, placeDeck, currentPlayer, wishedColor);
-                        if (selectedCard != NULL)
+                        if (selectedCard != nullptr)
                         {
                             wishedColor = "";
                             placeCardByPlayer(drawDeck, placeDeck, selectedCard);
@@ -890,9 +893,9 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                         b += _player->playerCards.size();
                     }
                 }
+                std::cout << "b: " << b << "; a: " << a << std::endl;
 
-
-                float newScore = (1 / a) * 2000 + b;
+                int newScore = (int)((1.0 / a) * 2000.0) + b;
 
                 currentPlayer->score = newScore;
             }
@@ -920,11 +923,12 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
             finished = true;
             for (Player* lastPlayer : players)
             {
-                if (lastPlayer->playerCards.size() != 0)
+                if (lastPlayer->playerCards.size() > 0)
                 {
+
                     ranking.push_back(lastPlayer);
-                    int a = lastPlayer->laidCards;
-                    lastPlayer->score = (1 / a) * 2000;
+                    int a = lastPlayer->laidCards + lastPlayer->playerCards.size();
+                    lastPlayer->score = (int)((1.0 / a) * 2000.0);
                 }
             }
         }
@@ -996,7 +1000,7 @@ void showPlaceDeck(std::vector<Card*>& placeDeck, std::string wishedColor)
     Card* shownCard = placeDeck.front();
     std::string shownCardInfo = shownCard->getCardInfo();
 
-    std::cout << "Die aktuell oberste Karte auf dem Legestapel ist: " << shownCard << std::endl;
+    std::cout << "Die aktuell oberste Karte auf dem Legestapel ist: " << shownCardInfo << std::endl;
     printCard(placeDeck.front());
     if (wishedColor != "")
     {
@@ -1294,12 +1298,26 @@ void executeAction(Card* card, bool& reverse, bool& skip, int& plustwo, bool& pl
                 switch (number)
                 {
                 case 0:
-                    tempCards = players[0]->playerCards;
-                    for (int i = 0; i < players.size() - 1; i++)
+                    if (reverse)
                     {
-                        players[i]->playerCards = players[i + 1]->playerCards;
+                        tempCards = players[0]->playerCards;
+                        for (int i = 0; i < players.size() - 1; i++)
+                        {
+                            players[i]->playerCards = players[i + 1]->playerCards;
+                        }
+                        players[players.size() - 1]->playerCards = tempCards;
                     }
-                    players[players.size() - 1]->playerCards = tempCards;
+                    else
+                    {
+                        tempCards = players[players.size() - 1]->playerCards;
+                        for (int i = players.size() - 1; i > 0; i--)
+                        {
+                            players[i]->playerCards = players[i - 1]->playerCards;
+                        }
+                        players[0]->playerCards = tempCards;
+                    }
+
+                    std::cout << "Die Karten jedes Spielers wurden in Spielrichtung weitergegeben." << std::endl;
                     break;
                 case 7:
 
@@ -2169,12 +2187,12 @@ void drawLine(Player* player)
 
 void clearScreen()
 {
-    //std::cout << "\n\n\n\n";
+    std::cout << "\n\n\n\n";
 
-    
+    /*
     for (int i = 0; i < 10; i++)
     {
         std::cout << "\n\n\n\n\n\n\n\n\n\n";
     }
-    
+    */
 }
