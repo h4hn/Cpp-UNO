@@ -18,7 +18,7 @@ public:
     std::vector<Card*> playerCards;
     int laidCards;
     int hasPlusTwo;
-    float score;
+    int score;
 };
 
 void intro();
