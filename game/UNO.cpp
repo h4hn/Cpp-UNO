@@ -1627,7 +1627,10 @@ void loadSaveGame() {
                 readSaveGame(selection);
                 correctInput = true;
             }
-            else std::cout << "Spielstand leer. Waehle einen anderen aus.";
+            else std::cout << "==========================================" << std::endl; 
+                 std::cout << "Spielstand leer. Waehle einen anderen aus." << std::endl;
+                 std::cout << "==========================================" << std::endl;
+                 loadSaveGame();
             break;
         case 2:
             if (!fileEmpty(sg2))
@@ -1635,7 +1638,10 @@ void loadSaveGame() {
                 readSaveGame(selection);
                 correctInput = true;
             }
-            else std::cout << "Spielstand leer. Waehle einen anderen aus.";
+            else std::cout << "==========================================" << std::endl; 
+                 std::cout << "Spielstand leer. Waehle einen anderen aus." << std::endl;
+                 std::cout << "==========================================" << std::endl;
+                 loadSaveGame();
             break;
         case 3:
             if (!fileEmpty(sg3))
@@ -1643,7 +1649,10 @@ void loadSaveGame() {
                 readSaveGame(selection);
                 correctInput = true;
             }
-            else std::cout << "Spielstand leer. Waehle einen anderen aus.";
+            else std::cout << "==========================================" << std::endl; 
+                 std::cout << "Spielstand leer. Waehle einen anderen aus." << std::endl;
+                 std::cout << "==========================================" << std::endl;
+                 loadSaveGame();
             break;
         case 4:
             deleteSelection();
