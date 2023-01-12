@@ -6,6 +6,7 @@ class Card
 public:
     int number;
     std::string color;
+    std::string getCardInfo();
 };
 
 class Player
@@ -17,7 +18,7 @@ public:
     std::vector<Card*> playerCards;
     int laidCards;
     int hasPlusTwo;
-    int score;
+    float score;
 };
 
 void intro();
