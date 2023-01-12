@@ -5,14 +5,13 @@
 #include <cstdlib>
 #include <fstream>
 #include <string>
-#include <chrono>
+#include <functional>
+#include <map>
 #include <iomanip>
-#include <ctime>
 
 #include "UNO.hpp"
 #include "CppRandom.hpp"
-#include <functional>
-#include <map>
+
 
 std::string Card::getCardInfo()
 {
@@ -169,6 +168,7 @@ std::string Card::getCardInfo()
     return cardInfo;
 }
 
+
 int main()
 {
     menu();
@@ -203,6 +203,8 @@ void menu()
         << "[ELSE]\t Beenden" << std::endl;
 
     std::cin >> selection;
+
+
 
     switch (selection)
     {
@@ -538,7 +540,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
 
             if (skip)
             {
-                
+
                 if (currentPlayer->bot)
                 {
                     std::cout << currentPlayer->name << " muss diese Runde aussetzen." << std::endl << std::endl;
@@ -1375,13 +1377,6 @@ void saveScores(std::vector<Player*>& players)
     }
     if (selection == 'y')
     {
-        auto t = std::time(nullptr);
-        auto tm = *std::localtime(&t);
-
-        std::ostringstream oss;
-        oss << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
-        auto time = oss.str();
-
         std::map<int, std::string> ranking;
 
         std::string strSplitter = ";";
@@ -1394,7 +1389,7 @@ void saveScores(std::vector<Player*>& players)
             while (getline(scoreFileRead, line))
             {
                 std::string pointsStr = line.substr(0, line.find(strSplitter));
-                int points = stoi(pointsStr);
+                int points = atoi(pointsStr.c_str());
                 if (points > MAX_POINTS)
                 {
                     points = MAX_POINTS;
@@ -1414,8 +1409,15 @@ void saveScores(std::vector<Player*>& players)
                 {
                     MAX_POINTS = player->score;
                 }
-                std::string info = player->name + " am " + time;
-                ranking[player->score] = info;
+                std::string info = player->name;
+                if (ranking[player->score] != "")
+                {
+                    ranking[player->score] = ranking[player->score] + ", " + info;
+                }
+                else
+                {
+                    ranking[player->score] = info;
+                }
             }
         }
 
@@ -1452,7 +1454,7 @@ void showRanking()
             if (line != "")
             {
                 std::string pointsStr = line.substr(0, line.find(strSplitter));
-                int points = stoi(pointsStr);
+                int points = atoi(pointsStr.c_str());
                 if (points > MAX_POINTS)
                 {
                     MAX_POINTS = points;
@@ -1627,10 +1629,13 @@ void loadSaveGame() {
                 readSaveGame(selection);
                 correctInput = true;
             }
-            else std::cout << "==========================================" << std::endl; 
-                 std::cout << "Spielstand leer. Waehle einen anderen aus." << std::endl;
-                 std::cout << "==========================================" << std::endl;
-                 loadSaveGame();
+            else
+            {
+                std::cout << "==========================================" << std::endl
+                    << "Spielstand leer. Waehle einen anderen aus." << std::endl
+                    << "==========================================" << std::endl;
+                loadSaveGame();
+            }
             break;
         case 2:
             if (!fileEmpty(sg2))
@@ -1638,10 +1643,13 @@ void loadSaveGame() {
                 readSaveGame(selection);
                 correctInput = true;
             }
-            else std::cout << "==========================================" << std::endl; 
-                 std::cout << "Spielstand leer. Waehle einen anderen aus." << std::endl;
-                 std::cout << "==========================================" << std::endl;
-                 loadSaveGame();
+            else
+            {
+                std::cout << "==========================================" << std::endl
+                    << "Spielstand leer. Waehle einen anderen aus." << std::endl
+                    << "==========================================" << std::endl;
+                loadSaveGame();
+            }
             break;
         case 3:
             if (!fileEmpty(sg3))
@@ -1649,10 +1657,13 @@ void loadSaveGame() {
                 readSaveGame(selection);
                 correctInput = true;
             }
-            else std::cout << "==========================================" << std::endl; 
-                 std::cout << "Spielstand leer. Waehle einen anderen aus." << std::endl;
-                 std::cout << "==========================================" << std::endl;
-                 loadSaveGame();
+            else
+            {
+                std::cout << "==========================================" << std::endl
+                    << "Spielstand leer. Waehle einen anderen aus." << std::endl
+                    << "==========================================" << std::endl;
+                loadSaveGame();
+            }
             break;
         case 4:
             deleteSelection();
@@ -1730,28 +1741,28 @@ void readSaveGame(int selection) {
         {
             //Lesen der Spielerinformationen
             Player* player = new Player;
-
+           
             getline(readScore, reading);
             id = atoi(reading.c_str());
             player->id = id;
-            
+
             getline(readScore, reading);
             botstate = reading;
             player->bot = resolve(botstate);
-            
+
             getline(readScore, reading);
             name = reading;
             player->name = name;
-            
+
             getline(readScore, reading);
             laidCards = atoi(reading.c_str());
             player->id = laidCards;
-            
+
             getline(readScore, reading);
             plusTwo = atoi(reading.c_str());
             player->hasPlusTwo = plusTwo;
             plustwoLoad = plusTwo;
-            
+
             getline(readScore, reading);
             std::string hasPlusFour = reading;
             player->hasPlusFour = resolve(hasPlusFour);
@@ -1783,6 +1794,17 @@ void readSaveGame(int selection) {
             //Speichern der Spieler
             player->playerCards = playerDeckLoad;
             playerScoreLoad.push_back(player);
+
+            //Bevor der nächste Spieler eingelesen werden kann, muss jeder Vektor gecleart werden
+            if (!playerDeckLoad.empty()) {
+                playerDeckLoad.clear();
+            }
+            if (!cardColor.empty()) {
+                cardColor.clear();
+            }
+            if (!cardNumber.empty()) {
+                cardNumber.clear();
+            }
         }
 
         if (!cardColor.empty()) {
@@ -1855,7 +1877,6 @@ void readSaveGame(int selection) {
         std::cout << "special rules sind aktiviert" << std::endl;
         std::cout << "============================" << std::endl;
     }
-
     game(drawDeckLoad, placeDeckLoad, playerScoreLoad, rulesActive, wishedColorSave);
 
     for (Card* card : drawDeckLoad)
