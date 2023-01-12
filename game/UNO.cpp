@@ -1372,10 +1372,6 @@ void saveScores(std::vector<Player*>& players)
     }
     if (selection == 'y')
     {
-        auto now = time(0);
-        char time[26];
-        //ctime_s(time, sizeof time, &now);
-
         std::map<int, std::string> ranking;
 
         std::string strSplitter = ";";
@@ -1408,8 +1404,15 @@ void saveScores(std::vector<Player*>& players)
                 {
                     MAX_POINTS = player->score;
                 }
-                std::string info = player->name + " am " + time;
-                ranking[player->score] = info;
+                std::string info = player->name;
+                if (ranking[player->score] != "")
+                {
+                    ranking[player->score] = ranking[player->score] + ", " + info;
+                }
+                else
+                {
+                    ranking[player->score] = info;
+                }
             }
         }
 
