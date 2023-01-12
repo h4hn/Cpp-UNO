@@ -13,6 +13,160 @@
 #include <functional>
 #include <map>
 
+std::string Card::getCardInfo()
+{
+    std::string cardInfo;
+
+    if (color == "rot")
+    {
+        switch (number)
+        {
+        case 0: cardInfo = "Rote 0";
+            break;
+        case 1: cardInfo = "Rote 1";
+            break;
+        case 2: cardInfo = "Rote 2";
+            break;
+        case 3: cardInfo = "Rote 3";
+            break;
+        case 4: cardInfo = "Rote 4";
+            break;
+        case 5: cardInfo = "Rote 5";
+            break;
+        case 6: cardInfo = "Rote 6";
+            break;
+        case 7: cardInfo = "Rote 7";
+            break;
+        case 8: cardInfo = "Rote 8";
+            break;
+        case 9: cardInfo = "Rote 9";
+            break;
+        case 10: cardInfo = "Rote \"Aussetzen\"-Karte";
+            break;
+        case 11: cardInfo = "Rote \"Richtungswechsel\"-Karte";
+            break;
+        case 12: cardInfo = "Rote \"Zwei Ziehen\"-Karte";
+            break;
+        default: cardInfo = "Karte nicht verfuegbar.";
+            break;
+        }
+    }
+    else if (color == "blau")
+    {
+        switch (number)
+        {
+        case 0: cardInfo = "Blaue 0";
+            break;
+        case 1: cardInfo = "Blaue 1";
+            break;
+        case 2: cardInfo = "Blaue 2";
+            break;
+        case 3: cardInfo = "Blaue 3";
+            break;
+        case 4: cardInfo = "Blaue 4";
+            break;
+        case 5: cardInfo = "Blaue 5";
+            break;
+        case 6: cardInfo = "Blaue 6";
+            break;
+        case 7: cardInfo = "Blaue 7";
+            break;
+        case 8: cardInfo = "Blaue 8";
+            break;
+        case 9: cardInfo = "Blaue 9";
+            break;
+        case 10: cardInfo = "Blaue \"Aussetzen\"-Karte";
+            break;
+        case 11: cardInfo = "Blaue \"Richtungswechsel\"-Karte";
+            break;
+        case 12: cardInfo = "Blaue \"Zwei Ziehen\"-Karte";
+            break;
+        default: cardInfo = "Karte nicht verfuegbar.";
+            break;
+        }
+    }
+    else if (color == "gruen")
+    {
+        switch (number)
+        {
+        case 0: cardInfo = "Gruene 0";
+            break;
+        case 1: cardInfo = "Gruene 1";
+            break;
+        case 2: cardInfo = "Gruene 2";
+            break;
+        case 3: cardInfo = "Gruene 3";
+            break;
+        case 4: cardInfo = "Gruene 4";
+            break;
+        case 5: cardInfo = "Gruene 5";
+            break;
+        case 6: cardInfo = "Gruene 6";
+            break;
+        case 7: cardInfo = "Gruene 7";
+            break;
+        case 8: cardInfo = "Gruene 8";
+            break;
+        case 9: cardInfo = "Gruene 9";
+            break;
+        case 10: cardInfo = "Gruene \"Aussetzen\"-Karte";
+            break;
+        case 11: cardInfo = "Gruene \"Richtungswechsel\"-Karte";
+            break;
+        case 12: cardInfo = "Gruene \"Zwei Ziehen\"-Karte";
+            break;
+        default: cardInfo = "Karte nicht verfuegbar.";
+            break;
+        }
+    }
+    else if (color == "gelb")
+    {
+        switch (number)
+        {
+        case 0: cardInfo = "Gelbe 0";
+            break;
+        case 1: cardInfo = "Gelbe 1";
+            break;
+        case 2: cardInfo = "Gelbe 2";
+            break;
+        case 3: cardInfo = "Gelbe 3";
+            break;
+        case 4: cardInfo = "Gelbe 4";
+            break;
+        case 5: cardInfo = "Gelbe 5";
+            break;
+        case 6: cardInfo = "Gelbe 6";
+            break;
+        case 7: cardInfo = "Gelbe 7";
+            break;
+        case 8: cardInfo = "Gelbe 8";
+            break;
+        case 9: cardInfo = "Gelbe 9";
+            break;
+        case 10: cardInfo = "Gelbe \"Aussetzen\"-Karte";
+            break;
+        case 11: cardInfo = "Gelbe \"Richtungswechsel\"-Karte";
+            break;
+        case 12: cardInfo = "Gelbe \"Zwei Ziehen\"-Karte";
+            break;
+        default: cardInfo = "Karte nicht verfuegbar.";
+            break;
+        }
+    }
+    else if (color == "schwarz")
+    {
+        switch (number)
+        {
+        case 0: cardInfo = "\"Farbwechsel\"-Karte";
+            break;
+        case 1: cardInfo = "\"Farbwechsel + 4\"-Karte";
+            break;
+        default: cardInfo = "Karte nicht verfuegbar.";
+            break;
+        }
+    }
+    return cardInfo;
+}
 
 int main()
 {
@@ -279,161 +433,161 @@ void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players
     }
 }
 
-std::string getCardInfo(Card* card)
-{
-    std::string cardInfo;
-
-    if (card->color == "rot")
-    {
-        switch (card->number)
-        {
-        case 0: cardInfo = "Rote 0";
-            break;
-        case 1: cardInfo = "Rote 1";
-            break;
-        case 2: cardInfo = "Rote 2";
-            break;
-        case 3: cardInfo = "Rote 3";
-            break;
-        case 4: cardInfo = "Rote 4";
-            break;
-        case 5: cardInfo = "Rote 5";
-            break;
-        case 6: cardInfo = "Rote 6";
-            break;
-        case 7: cardInfo = "Rote 7";
-            break;
-        case 8: cardInfo = "Rote 8";
-            break;
-        case 9: cardInfo = "Rote 9";
-            break;
-        case 10: cardInfo = "Rote \"Aussetzen\"-Karte";
-            break;
-        case 11: cardInfo = "Rote \"Richtungswechsel\"-Karte";
-            break;
-        case 12: cardInfo = "Rote \"Zwei Ziehen\"-Karte";
-            break;
-        default: cardInfo = "Karte nicht verfuegbar.";
-            break;
-        }
-    }
-    else if (card->color == "blau")
-    {
-        switch (card->number)
-        {
-        case 0: cardInfo = "Blaue 0";
-            break;
-        case 1: cardInfo = "Blaue 1";
-            break;
-        case 2: cardInfo = "Blaue 2";
-            break;
-        case 3: cardInfo = "Blaue 3";
-            break;
-        case 4: cardInfo = "Blaue 4";
-            break;
-        case 5: cardInfo = "Blaue 5";
-            break;
-        case 6: cardInfo = "Blaue 6";
-            break;
-        case 7: cardInfo = "Blaue 7";
-            break;
-        case 8: cardInfo = "Blaue 8";
-            break;
-        case 9: cardInfo = "Blaue 9";
-            break;
-        case 10: cardInfo = "Blaue \"Aussetzen\"-Karte";
-            break;
-        case 11: cardInfo = "Blaue \"Richtungswechsel\"-Karte";
-            break;
-        case 12: cardInfo = "Blaue \"Zwei Ziehen\"-Karte";
-            break;
-        default: cardInfo = "Karte nicht verfuegbar.";
-            break;
-        }
-    }
-    else if (card->color == "gruen")
-    {
-        switch (card->number)
-        {
-        case 0: cardInfo = "Gruene 0";
-            break;
-        case 1: cardInfo = "Gruene 1";
-            break;
-        case 2: cardInfo = "Gruene 2";
-            break;
-        case 3: cardInfo = "Gruene 3";
-            break;
-        case 4: cardInfo = "Gruene 4";
-            break;
-        case 5: cardInfo = "Gruene 5";
-            break;
-        case 6: cardInfo = "Gruene 6";
-            break;
-        case 7: cardInfo = "Gruene 7";
-            break;
-        case 8: cardInfo = "Gruene 8";
-            break;
-        case 9: cardInfo = "Gruene 9";
-            break;
-        case 10: cardInfo = "Gruene \"Aussetzen\"-Karte";
-            break;
-        case 11: cardInfo = "Gruene \"Richtungswechsel\"-Karte";
-            break;
-        case 12: cardInfo = "Gruene \"Zwei Ziehen\"-Karte";
-            break;
-        default: cardInfo = "Karte nicht verfuegbar.";
-            break;
-        }
-    }
-    else if (card->color == "gelb")
-    {
-        switch (card->number)
-        {
-        case 0: cardInfo = "Gelbe 0";
-            break;
-        case 1: cardInfo = "Gelbe 1";
-            break;
-        case 2: cardInfo = "Gelbe 2";
-            break;
-        case 3: cardInfo = "Gelbe 3";
-            break;
-        case 4: cardInfo = "Gelbe 4";
-            break;
-        case 5: cardInfo = "Gelbe 5";
-            break;
-        case 6: cardInfo = "Gelbe 6";
-            break;
-        case 7: cardInfo = "Gelbe 7";
-            break;
-        case 8: cardInfo = "Gelbe 8";
-            break;
-        case 9: cardInfo = "Gelbe 9";
-            break;
-        case 10: cardInfo = "Gelbe \"Aussetzen\"-Karte";
-            break;
-        case 11: cardInfo = "Gelbe \"Richtungswechsel\"-Karte";
-            break;
-        case 12: cardInfo = "Gelbe \"Zwei Ziehen\"-Karte";
-            break;
-        default: cardInfo = "Karte nicht verfuegbar.";
-            break;
-        }
-    }
-    else if (card->color == "schwarz")
-    {
-        switch (card->number)
-        {
-        case 0: cardInfo = "\"Farbwechsel\"-Karte";
-            break;
-        case 1: cardInfo = "\"Farbwechsel + 4\"-Karte";
-            break;
-        default: cardInfo = "Karte nicht verfuegbar.";
-            break;
-        }
-    }
-
-    return cardInfo;
-}
+//std::string getCardInfo(Card* card)
+//{
+//    std::string cardInfo;
+//
+//    if (card->color == "rot")
+//    {
+//        switch (card->number)
+//        {
+//        case 0: cardInfo = "Rote 0";
+//            break;
+//        case 1: cardInfo = "Rote 1";
+//            break;
+//        case 2: cardInfo = "Rote 2";
+//            break;
+//        case 3: cardInfo = "Rote 3";
+//            break;
+//        case 4: cardInfo = "Rote 4";
+//            break;
+//        case 5: cardInfo = "Rote 5";
+//            break;
+//        case 6: cardInfo = "Rote 6";
+//            break;
+//        case 7: cardInfo = "Rote 7";
+//            break;
+//        case 8: cardInfo = "Rote 8";
+//            break;
+//        case 9: cardInfo = "Rote 9";
+//            break;
+//        case 10: cardInfo = "Rote \"Aussetzen\"-Karte";
+//            break;
+//        case 11: cardInfo = "Rote \"Richtungswechsel\"-Karte";
+//            break;
+//        case 12: cardInfo = "Rote \"Zwei Ziehen\"-Karte";
+//            break;
+//        default: cardInfo = "Karte nicht verfuegbar.";
+//            break;
+//        }
+//    }
+//    else if (card->color == "blau")
+//    {
+//        switch (card->number)
+//        {
+//        case 0: cardInfo = "Blaue 0";
+//            break;
+//        case 1: cardInfo = "Blaue 1";
+//            break;
+//        case 2: cardInfo = "Blaue 2";
+//            break;
+//        case 3: cardInfo = "Blaue 3";
+//            break;
+//        case 4: cardInfo = "Blaue 4";
+//            break;
+//        case 5: cardInfo = "Blaue 5";
+//            break;
+//        case 6: cardInfo = "Blaue 6";
+//            break;
+//        case 7: cardInfo = "Blaue 7";
+//            break;
+//        case 8: cardInfo = "Blaue 8";
+//            break;
+//        case 9: cardInfo = "Blaue 9";
+//            break;
+//        case 10: cardInfo = "Blaue \"Aussetzen\"-Karte";
+//            break;
+//        case 11: cardInfo = "Blaue \"Richtungswechsel\"-Karte";
+//            break;
+//        case 12: cardInfo = "Blaue \"Zwei Ziehen\"-Karte";
+//            break;
+//        default: cardInfo = "Karte nicht verfuegbar.";
+//            break;
+//        }
+//    }
+//    else if (card->color == "gruen")
+//    {
+//        switch (card->number)
+//        {
+//        case 0: cardInfo = "Gruene 0";
+//            break;
+//        case 1: cardInfo = "Gruene 1";
+//            break;
+//        case 2: cardInfo = "Gruene 2";
+//            break;
+//        case 3: cardInfo = "Gruene 3";
+//            break;
+//        case 4: cardInfo = "Gruene 4";
+//            break;
+//        case 5: cardInfo = "Gruene 5";
+//            break;
+//        case 6: cardInfo = "Gruene 6";
+//            break;
+//        case 7: cardInfo = "Gruene 7";
+//            break;
+//        case 8: cardInfo = "Gruene 8";
+//            break;
+//        case 9: cardInfo = "Gruene 9";
+//            break;
+//        case 10: cardInfo = "Gruene \"Aussetzen\"-Karte";
+//            break;
+//        case 11: cardInfo = "Gruene \"Richtungswechsel\"-Karte";
+//            break;
+//        case 12: cardInfo = "Gruene \"Zwei Ziehen\"-Karte";
+//            break;
+//        default: cardInfo = "Karte nicht verfuegbar.";
+//            break;
+//        }
+//    }
+//    else if (card->color == "gelb")
+//    {
+//        switch (card->number)
+//        {
+//        case 0: cardInfo = "Gelbe 0";
+//            break;
+//        case 1: cardInfo = "Gelbe 1";
+//            break;
+//        case 2: cardInfo = "Gelbe 2";
+//            break;
+//        case 3: cardInfo = "Gelbe 3";
+//            break;
+//        case 4: cardInfo = "Gelbe 4";
+//            break;
+//        case 5: cardInfo = "Gelbe 5";
+//            break;
+//        case 6: cardInfo = "Gelbe 6";
+//            break;
+//        case 7: cardInfo = "Gelbe 7";
+//            break;
+//        case 8: cardInfo = "Gelbe 8";
+//            break;
+//        case 9: cardInfo = "Gelbe 9";
+//            break;
+//        case 10: cardInfo = "Gelbe \"Aussetzen\"-Karte";
+//            break;
+//        case 11: cardInfo = "Gelbe \"Richtungswechsel\"-Karte";
+//            break;
+//        case 12: cardInfo = "Gelbe \"Zwei Ziehen\"-Karte";
+//            break;
+//        default: cardInfo = "Karte nicht verfuegbar.";
+//            break;
+//        }
+//    }
+//    else if (card->color == "schwarz")
+//    {
+//        switch (card->number)
+//        {
+//        case 0: cardInfo = "\"Farbwechsel\"-Karte";
+//            break;
+//        case 1: cardInfo = "\"Farbwechsel + 4\"-Karte";
+//            break;
+//        default: cardInfo = "Karte nicht verfuegbar.";
+//            break;
+//        }
+//    }
+//
+//    return cardInfo;
+//}
 
 void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck)
 {
@@ -572,7 +726,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                             placeCardByPlayer(drawDeck, placeDeck, plusTwoCard);
                             currentPlayer->playerCards.erase(currentPlayer->playerCards.begin() + plusTwoIndex);
                             plustwo += 2;
-                            std::cout << currentPlayer->name << " hat eine " << getCardInfo(plusTwoCard) << " gelegt." << std::endl << std::endl;
+                            std::cout << currentPlayer->name << " hat eine " << plusTwoCard->getCardInfo() << " gelegt." << std::endl << std::endl;
                             currentPlayer->laidCards++;
                         }
                         else
@@ -607,7 +761,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                             placeCardByPlayer(drawDeck, placeDeck, selectedCard);
                             executeAction(selectedCard, reverse, skip, plustwo, plusfour, wishedColor, currentPlayer, specialRules, players);
                             currentPlayer->laidCards++;
-                            std::cout << currentPlayer->name << " hat eine " << getCardInfo(selectedCard) << " gelegt." << std::endl;
+                            std::cout << currentPlayer->name << " hat eine " << selectedCard->getCardInfo() << " gelegt." << std::endl;
                             if (selectedCard->color == "schwarz")
                             {
                                 std::cout << currentPlayer->name << " hat sich die Farbe " << wishedColor << " gewuenscht." << std::endl;
@@ -738,7 +892,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                 }
 
 
-                int newScore = (1 / a) * 2000 + b;
+                float newScore = (1 / a) * 2000 + b;
 
                 currentPlayer->score = newScore;
             }
@@ -839,7 +993,8 @@ void confirmNextPlayer(Player* player)
 
 void showPlaceDeck(std::vector<Card*>& placeDeck, std::string wishedColor)
 {
-    std::string shownCard = getCardInfo(placeDeck.front());
+    Card* shownCard = placeDeck.front();
+    std::string shownCardInfo = shownCard->getCardInfo();
 
     std::cout << "Die aktuell oberste Karte auf dem Legestapel ist: " << shownCard << std::endl;
     printCard(placeDeck.front());
@@ -959,7 +1114,7 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
         int index = 0;
         for (Card* card : player->playerCards)
         {
-            std::string cardInfo = getCardInfo(card);
+            std::string cardInfo = card->getCardInfo();
             std::cout << "[" << index + 1 << "]\t" << cardInfo << std::endl;
             index++;
         }
@@ -1034,7 +1189,7 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
             }
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 void drawCard(std::vector<Card*>& drawDeck, Player* player)
@@ -1252,7 +1407,7 @@ void wishColor(std::string& newColor, Player* player)
             drawLine(player);
             for (Card* card : player->playerCards)
             {
-                std::cout << " - " << getCardInfo(card) << std::endl;
+                std::cout << " - " << card->getCardInfo() << std::endl;
             }
             drawLine(player);
             std::cout << std::endl << "Bitte waehle die Farbe, die du dir wuenschst." << std::endl
@@ -1890,12 +2045,10 @@ void printCard(Card* card)
     {
         while (getline(f, reading))
         {
-            if (reading == getCardInfo(card))
+            if (reading == card->getCardInfo())
             {
-                std::cout << "5";
                 for (int i = 0; i < 8; i++)
                 {
-                    std::cout << "6";
                     getline(f, reading);
                     std::cout << reading << std::endl;
                 }
@@ -1926,7 +2079,10 @@ void printPlayerCards(Player* player)
         while (!f.eof() && !foundCard)
         {
             f.getline(cstring, sizeof(cstring));
-            if (cstring == getCardInfo(player->playerCards[i]))
+
+            Card* card = player->playerCards[i];
+
+            if (cstring == card->getCardInfo())
             {
                 f.getline(cstring, sizeof(cstring));
                 std::cout << cstring << " ";
