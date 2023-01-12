@@ -53,6 +53,9 @@ void readScore(int selection);
 void printPlayerCards(Player* player);
 void printCard(Card* card);
 bool resolve(std::string in);
+void deleteSelection();
+bool fileEmpty(std::string filePath);
+void deleteSaveGame(std::string filePath);
 void drawLine(Player* player);
 void clearScreen();
 
