@@ -16,8 +16,6 @@
 
 int main()
 {
-    intro();
-
     menu();
 
     return 0;
@@ -39,6 +37,7 @@ void intro()
 
 void menu()
 {
+    intro();
     int selection;
     std::cout
         << "[1]\t Singleplayer" << std::endl
@@ -1505,7 +1504,7 @@ void writeScore(int selection) {
         scoresFile.open("./savegames/savegame2.txt");
         break;
     case 3:
-        scoresFile.open("./savegames/savegame2.txt");
+        scoresFile.open("./savegames/savegame3.txt");
         break;
     default:
         std::cout << "Can´t open file." << std::endl;
@@ -1567,30 +1566,74 @@ void writeScore(int selection) {
 }
 
 void loadGame() {
+    bool correctInput = false;
     int selection;
+    std::string sg1 = "./savegames/savegame1.txt";
+    std::string sg2 = "./savegames/savegame2.txt";
+    std::string sg3 = "./savegames/savegame3.txt";
 
-    std::cout
-        << "Waehle den gewuenschten Speicherstand aus." << std::endl
-        << "[1]\t Speicherstand 1" << std::endl
-        << "[2]\t Speicherstand 2" << std::endl
-        << "[3]\t Speicherstand 3" << std::endl
-        << "[4]\t Zurueck zum Menue" << std::endl;
+    std::cout << "Waehle den gewuenschten Speicherstand aus." << std::endl;
 
-    std::cin >> selection;
+    if (fileEmpty(sg1))
+        std::cout << "[1]\t Speicherstand 1 [leer]" << std::endl;
+    else
+        std::cout << "[1]\t Speicherstand 1 [voll]" << std::endl;
 
-    switch (selection)
+    if (fileEmpty(sg2))
+        std::cout << "[2]\t Speicherstand 2 [leer]" << std::endl;
+    else
+        std::cout << "[2]\t Speicherstand 2 [voll]" << std::endl;
+
+    if (fileEmpty(sg3))
+        std::cout << "[3]\t Speicherstand 3 [leer]" << std::endl;
+    else
+        std::cout << "[3]\t Speicherstand 3 [voll]" << std::endl;
+
+    std::cout << "[4]\t Spielstand loeschen" << std::endl;
+    std::cout << "[5]\t Zurueck zum Menue" << std::endl;
+
+    while (!correctInput)
     {
-    case 1: readScore(selection);
-        break;
-    case 2: readScore(selection);
-        break;
-    case 3: readScore(selection);
-        break;
-    case 4: menu();
-        break;
-    default:
-        std::cout << "Couldn´t resolve action." << std::endl;
-        break;
+        std::cin >> selection;
+        switch (selection)
+        {
+        case 1:
+            if (!fileEmpty(sg1))
+            {
+                readScore(selection);
+                correctInput = true;
+            }
+            else std::cout << "Spielstand leer. Waehle einen anderen aus.";
+            break;
+        case 2:
+            if (!fileEmpty(sg2))
+            {
+                readScore(selection);
+                correctInput = true;
+            }
+            else std::cout << "Spielstand leer. Waehle einen anderen aus.";
+            break;
+        case 3:
+            if (!fileEmpty(sg3))
+            {
+                readScore(selection);
+                correctInput = true;
+            }
+            else std::cout << "Spielstand leer. Waehle einen anderen aus.";
+            break;
+        case 4:
+            deleteSelection();
+            correctInput = true;
+            break;
+        case 5:
+            clearScreen();
+            menu();
+            correctInput = true;
+            break;
+        default:
+            std::cout << "Couldn´t resolve action." << std::endl;
+            break;
+        }
     }
 }
 
@@ -1625,7 +1668,7 @@ void readScore(int selection) {
         readScore.open("./savegames/savegame2.txt");
         break;
     case 3:
-        readScore.open("./savegames/savegame2.txt");
+        readScore.open("./savegames/savegame3.txt");
         break;
     default:
         std::cout << "Can´t open file." << std::endl;
@@ -1784,26 +1827,87 @@ void readScore(int selection) {
     game(drawDeckLoad, placeDeckLoad, playerScoreLoad, rulesActive, wishedColorSave);
 }
 
+void deleteSelection()
+{
+    int selection;
+    int index = 1;
+    std::string sg1 = "./savegames/savegame1.txt";
+    std::string sg2 = "./savegames/savegame2.txt";
+    std::string sg3 = "./savegames/savegame3.txt";
+
+    if (fileEmpty(sg1) && fileEmpty(sg2) && fileEmpty(sg3))
+    {
+        std::cout << "Alle Spielstaende sind bereits leer" << std::endl;
+        backToMenu();
+    }
+    else {
+        std::cout << "Welcher Spielstand soll geloescht werden?" << std::endl;
+
+        if (!fileEmpty(sg1))
+        {
+            std::cout << "[1]\t Speicherstand 1" << std::endl;
+            index++;
+        }
+        if (!fileEmpty(sg2))
+        {
+            std::cout << "[2]\t Speicherstand 2" << std::endl;
+            index++;
+        }
+        if (!fileEmpty(sg3))
+        {
+            std::cout << "[3]\t Speicherstand 3" << std::endl;
+        }
+
+
+        std::cin >> selection;
+        switch (selection)
+        {
+        case 1:
+            deleteSaveGame(sg1);
+            std::cout << "Spielstand 1 erfolgreich geloescht." << std::endl;
+            break;
+        case 2:
+            deleteSaveGame(sg2);
+            std::cout << "Spielstand 2 erfolgreich geloescht." << std::endl;
+            break;
+        case 3:
+            deleteSaveGame(sg3);
+            std::cout << "Spielstand 3 erfolgreich geloescht." << std::endl;
+            break;
+        default:
+            break;
+        }
+        loadGame();
+    }
+}
+
 void printCard(Card* card)
 {
-    std::ifstream f;
-    char cstring[256];
-    f.open("Cards.txt", std::ios::in);
+    std::ifstream f("Cards.txt");
+    std::string reading;
 
-    while (!f.eof())
+    if (f.is_open())
     {
-        f.getline(cstring, sizeof(cstring));
-        if (cstring == getCardInfo(card))
+        while (getline(f, reading))
         {
-            for (int i = 0; i < 8; i++)
+            if (reading == getCardInfo(card))
             {
-                f.getline(cstring, sizeof(cstring));
-                std::cout << cstring << std::endl;
-            }
+                std::cout << "5";
+                for (int i = 0; i < 8; i++)
+                {
+                    std::cout << "6";
+                    getline(f, reading);
+                    std::cout << reading << std::endl;
+                }
+                f.close();
 
+            }
         }
     }
-    f.close();
+    else
+    {
+        std::cout << "File not found." << std::endl;
+    }
 }
 
 void printPlayerCards(Player* player)
@@ -1862,6 +1966,32 @@ bool resolve(std::string in) {
         op = false;
     }
     return op;
+}
+
+bool fileEmpty(std::string filePath)
+{
+    std::ifstream readScore;
+    std::string reading;
+    readScore.open(filePath);
+    bool isEmpty = true;
+    while (!readScore.eof())
+    {
+        getline(readScore, reading);
+        if (!reading.empty())
+        {
+            isEmpty = false;
+        }
+    }
+    readScore.close();
+    return isEmpty;
+}
+
+void deleteSaveGame(std::string filePath)
+{
+    std::ofstream scoresFile;
+    scoresFile.open(filePath);
+    scoresFile.clear();
+    scoresFile.close();
 }
 
 void drawLine(Player* player)
