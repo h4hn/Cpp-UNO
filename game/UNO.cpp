@@ -1486,7 +1486,7 @@ void saveScores(std::vector<Player*>& players)
             {
                 if (ranking[i] != "")
                 {
-                    scoreFileWrite << i << strSplitter << ranking[i];
+                    scoreFileWrite << i << strSplitter << ranking[i] << std::endl;
                 }
             }
             scoreFileWrite.close();
