@@ -253,12 +253,12 @@ void startGame(bool multiplayer) //erstellt alle nötigen Objekte zum Spielen
         if (multiplayer)
         {
             std::cout << "Multiplayer" << std::endl;
-            drawLine(NULL);
+            drawLine(nullptr);
         }
         else
         {
             std::cout << "Singleplayer" << std::endl;
-            drawLine(NULL);
+            drawLine(nullptr);
         }
         std::vector<Card*> drawDeck;
         std::vector<Card*> placeDeck;
@@ -564,7 +564,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                 std::cout << "Aktueller Spieler: " << currentPlayer->name << std::endl;
             }
 
-            
+
 
             //Speichern der aktuellen Player in externen Vektor
             for (int i = 0; i < players.size(); i++) {
@@ -636,7 +636,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                     else if (plusfour) //Überprüfung ob Bot 4 Aufziehen muss durch vorherige +4 karte
                     {
                         //Spieler muss 4 Karten ziehen und darf keine Karte legen
-                        
+
                         std::cout << currentPlayer->name << " muss 4 Karten ziehen." << std::endl << std::endl;
                         for (int i = 0; i < 4; i++)
                         {
@@ -757,7 +757,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                         * Spieler, die Karten ziehen mussten, duerfen nicht direkt wieder eine Karte legen.
                         */
                         Card* selectedCard = selectCard(drawDeck, placeDeck, currentPlayer, wishedColor);
-                        if (selectedCard != NULL)
+                        if (selectedCard != nullptr)
                         {
                             wishedColor = "";
                             placeCardByPlayer(drawDeck, placeDeck, selectedCard);
@@ -910,7 +910,7 @@ Card* selectCardBOT(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck,
 {
     std::vector<Player*> ranking;
     Card* placeDeckCard = placeDeck.front(); //oberste Karte
-    Card* selectedCard = NULL; //output
+    Card* selectedCard = nullptr; //output
     bool correctInput = false;
     bool cardDrawn = false;
     int stepcount = 0;
@@ -992,7 +992,7 @@ Card* selectCardBOT(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck,
         }
         stepcount = 0;
 
-        if (selectedCard == NULL) //Wenn keine Karte möglich ist, Karte aufziehen. Wenn diese Legbar ist, wird sie gelegt
+        if (selectedCard == nullptr) //Wenn keine Karte möglich ist, Karte aufziehen. Wenn diese Legbar ist, wird sie gelegt
         {
             drawCard(drawDeck, player);
             if (checkCard(placeDeckCard, player->playerCards[player->playerCards.size() - 1], wishedColor))
@@ -1070,7 +1070,7 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
         else if (selection == player->playerCards.size() + 1 && cardDrawn)
         {
             clearScreen();
-            return NULL;
+            return nullptr;
         }
         else
         {
@@ -1749,19 +1749,19 @@ void loadSaveGame() //Auswahl welcher Spielstand geladen werden soll
 void readSaveGame(int selection) //Liest Speicherstände aus
 {
 
-    if (!playerDeckLoad.empty()) 
+    if (!playerDeckLoad.empty())
     {
         playerDeckLoad.clear();
     }
-    if (!playerScoreLoad.empty()) 
+    if (!playerScoreLoad.empty())
     {
         playerScoreLoad.clear();
     }
-    if (!cardColor.empty()) 
+    if (!cardColor.empty())
     {
         cardColor.clear();
     }
-    if (!cardNumber.empty()) 
+    if (!cardNumber.empty())
     {
         cardNumber.clear();
     }
@@ -2146,7 +2146,7 @@ void deleteSaveGame(std::string filePath) //Löscht Spielstand in Pfad
 
 void drawLine(Player* player) //Gibt Linie von Länge der Anzahl an Karten aus
 {
-    if (player != NULL)
+    if (player != nullptr)
     {
         int cards = player->playerCards.size();
         int linelength = 0;
