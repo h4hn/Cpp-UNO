@@ -24,12 +24,16 @@ Punktesystem:
         - Wie viele Karten er gelegt hat, bis er beendet hat.
         - Wie viele Karten die anderen Spieler noch hatten, als er seine
           letzte Karte abgelegt hat.
+        - Welchen Platz er im Ranking erreicht hat.
     - Berechnung der erreichten Punktzahl:
         a = Anzahl der Karten, die man in der Runde gelegt hat.
         b = Anzahl der Karten, die die anderen Spieler haben, wenn man beendet.
         p = Punktzahl
-        
         --> p = (1/a)*2000 + b
+        Zusaetzlich erhalten folgende Spieler einen Bonus:
+            - 1. Platz: 200 Punkte
+            - 2. Platz: 100 Punkte
+            - 3. Platz: 50 Punkte
 
 Aktionskarten:
     - Legt ein Spieler eine "Zwei Ziehen"-Karte, muss der naechste Spieler
