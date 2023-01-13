@@ -2160,7 +2160,7 @@ bool fileEmpty(std::string filePath) //Überprüft ob Datei in Pfad leer ist
 
 void deleteSaveGame(std::string filePath) //Löscht Spielstand in Pfad
 {
-    std::ofstream scoresFile;
+    std::ofstream scoresFile(filePath);
     scoresFile.open(filePath);
     scoresFile.clear();
     scoresFile.close();
