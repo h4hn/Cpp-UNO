@@ -5,7 +5,6 @@
 #include <cstdlib>
 #include <fstream>
 #include <string>
-#include <functional>
 #include <map>
 #include <iomanip>
 
@@ -176,21 +175,21 @@ int main()
     return 0;
 }
 
-void intro()
+void intro() //gibt den Intro Screen aus
 {
     clearScreen();
-    std::fstream f;
-    char cstring[256];
-    f.open("Intro.txt", std::ios::in);
+    std::ifstream f;
+    std::string reading;
+    f.open("Intro.txt");
     while (!f.eof())
     {
-        f.getline(cstring, sizeof(cstring));
-        std::cout << cstring << std::endl;
+        getline(f, reading);
+        std::cout << reading << std::endl;
     }
     f.close();
 }
 
-void menu()
+void menu() //gibt das Menu aus und leitet je nach Input weiter
 {
     intro();
     int selection;
@@ -224,16 +223,16 @@ void menu()
     }
 }
 
-void showRules()
+void showRules() // zeigt die Spielregeln
 {
     clearScreen();
-    std::fstream f;
-    char cstring[256];
+    std::ifstream f;
+    std::string reading;
     f.open("Rules.txt", std::ios::in);
     while (!f.eof())
     {
-        f.getline(cstring, sizeof(cstring));
-        std::cout << cstring << std::endl;
+        getline(f, reading);
+        std::cout << reading << std::endl;
     }
     f.close();
     std::cout << std::endl << "Mit Enter zurueck zum Menue.";
@@ -244,57 +243,66 @@ void showRules()
     menu();
 }
 
-void startGame(bool multiplayer)
+void startGame(bool multiplayer) //erstellt alle nötigen Objekte zum Spielen
 {
-    clearScreen();
-    if (multiplayer)
+
+
+    if (fileEmpty("./savegames/antiragequitsave.txt"))
     {
-        std::cout << "Multiplayer" << std::endl;
-        drawLine(NULL);
+        clearScreen();
+        if (multiplayer)
+        {
+            std::cout << "Multiplayer" << std::endl;
+            drawLine(NULL);
+        }
+        else
+        {
+            std::cout << "Singleplayer" << std::endl;
+            drawLine(NULL);
+        }
+        std::vector<Card*> drawDeck;
+        std::vector<Card*> placeDeck;
+        std::vector<Player*> players;
+        bool specialRules = false;
+        std::string colorWish = "";
+
+        createPlayers(players, multiplayer);
+        createCards(drawDeck);
+        distributeCards(drawDeck, players);
+        placeStartCard(drawDeck, placeDeck);
+        chooseRules(specialRules);
+
+        startPlayerID = GetRandomNumberBetween(0, players.size() - 1);
+        plustwoLoad = 0;
+        plusfourLoad = false;
+
+        game(drawDeck, placeDeck, players, specialRules, colorWish);
+        //Wenn Spiel beendet werden alle Objekte gelöscht
+        for (Card* card : drawDeck)
+        {
+            delete card;
+        }
+        for (Card* card : placeDeck)
+        {
+            delete card;
+        }
+        for (Player* player : players)
+        {
+            delete player;
+        }
     }
     else
     {
-        std::cout << "Singleplayer" << std::endl;
-        drawLine(NULL);
-    }
-    std::vector<Card*> drawDeck;
-    std::vector<Card*> placeDeck;
-    std::vector<Player*> players;
-    bool specialRules = false;
-    std::string colorWish = "";
-
-    createPlayers(players, multiplayer);
-    createCards(drawDeck);
-    distributeCards(drawDeck, players);
-    placeStartCard(drawDeck, placeDeck);
-    chooseRules(specialRules);
-
-    startPlayerID = GetRandomNumberBetween(0, players.size() - 1);
-    plustwoLoad = 0;
-    plusfourLoad = false;
-
-    game(drawDeck, placeDeck, players, specialRules, colorWish);
-
-    for (Card* card : drawDeck)
-    {
-        delete card;
-    }
-    for (Card* card : placeDeck)
-    {
-        delete card;
-    }
-    for (Player* player : players)
-    {
-        delete player;
+        antiRageQuit(multiplayer);
     }
 }
 
-void createPlayers(std::vector<Player*>& players, bool multiplayer)
+void createPlayers(std::vector<Player*>& players, bool multiplayer) //Erzeugt Objekte der Spieler
 {
     int numberOfPlayers = selectPlayerAmount();
     std::cout << "Es spielen " << numberOfPlayers << " Spieler mit." << std::endl << std::endl;
 
-    if (multiplayer)
+    if (multiplayer) //Wenn Multiplayer können für jeden Spieler Namen eingegebene werden
     {
         for (int i = 1; i < numberOfPlayers + 1; i++)
         {
@@ -309,7 +317,7 @@ void createPlayers(std::vector<Player*>& players, bool multiplayer)
             players.push_back(player);
         }
     }
-    else
+    else //Wenn Singleplayer wird nur ein Name eingegeben. Der Rest der Spieler werden unter Namen: BOT<Nr> initialisiert
     {
         std::string name = "Spieler1";
         Player* player = new Player;
@@ -320,7 +328,7 @@ void createPlayers(std::vector<Player*>& players, bool multiplayer)
         player->laidCards = 0;
         players.push_back(player);
 
-        for (int i = 2; i < numberOfPlayers + 1; i++)
+        for (int i = 2; i < numberOfPlayers + 1; i++) // Initialisierung der BOTs
         {
             std::string name = "BOT";
             name.push_back(i + 47);
@@ -331,10 +339,9 @@ void createPlayers(std::vector<Player*>& players, bool multiplayer)
             players.push_back(player);
         }
     }
-
 }
 
-int selectPlayerAmount()
+int selectPlayerAmount() //Abfrage wieviel Spieler mitspielen
 {
     bool correctInput = false;
     int playerAmount;
@@ -343,7 +350,7 @@ int selectPlayerAmount()
         playerAmount = 0;
         std::cout << "Gebe die Anzahl an Spielern ein: " << std::endl;
         std::cin >> playerAmount;
-        if (playerAmount < 2 || playerAmount > 4)
+        if (playerAmount < 2 || playerAmount > 4) //Minimal 2 Maximal 4 Spieler sind erlaubt
         {
             std::cout << "Es muessen mindestens 2 und maximal 4 Spieler mitspielen." << std::endl;
             std::cin.clear();
@@ -358,7 +365,7 @@ int selectPlayerAmount()
     return playerAmount;
 }
 
-void createCards(std::vector<Card*>& drawDeck)
+void createCards(std::vector<Card*>& drawDeck) //Generierung der Karten
 {
     // Karten instanziieren --> Es muessen folgende Karten dem Deck hinzugefuegt werden: https://de.wikipedia.org/wiki/Uno_(Kartenspiel)#/media/Datei:UNO_cards_deck.svg
 
@@ -419,16 +426,16 @@ void createCards(std::vector<Card*>& drawDeck)
     }
 }
 
-void shuffleDeck(std::vector<Card*>& deck)
+void shuffleDeck(std::vector<Card*>& deck) //Kartendeck mischeln
 {
     std::random_device rd;
     std::shuffle(std::begin(deck), std::end(deck), rd);
 }
 
-void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players)
+void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players) //Karten an spieler austeilen
 {
     shuffleDeck(drawDeck);
-    // Jeder Spieler erh�lt sieben zufaellige Karten aus dem drawDeck
+    // Jeder Spieler erhaelt sieben zufaellige Karten aus dem drawDeck
     for (int i = 0; i < 7; i++)
     {
         for (Player* player : players)
@@ -440,7 +447,7 @@ void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players
     }
 }
 
-void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck)
+void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck) //Die Startkarte wird zufaellig bestimmt
 {
     bool isActionCard = false;
     Card* startCard = new Card;
@@ -449,7 +456,7 @@ void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck)
         isActionCard = false;
         startCard = drawDeck.front();
         drawDeck.erase(drawDeck.begin());
-        if (startCard->color == "schwarz" || startCard->number >= 10 && startCard->number <= 12)
+        if (startCard->color == "schwarz" || startCard->number >= 10 && startCard->number <= 12) //Überprüfung ob Startkarte eine Actionkarte ist -> Wenn ja wird eine neue gewaehlt
         {
             isActionCard = true;
             drawDeck.push_back(startCard);
@@ -457,9 +464,14 @@ void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck)
     } while (isActionCard);
 
     placeDeck.push_back(startCard);
+
+    if (!actualPlaceDeck.empty()) {
+        actualPlaceDeck.erase(actualPlaceDeck.begin());
+    }
+    actualPlaceDeck.push_back(startCard);
 }
 
-void chooseRules(bool& specialRules)
+void chooseRules(bool& specialRules) //Abfrage ob mit oder ohne Spezial Regel gespielt werden soll
 {
     bool correctInput = false;
     char choice;
@@ -488,7 +500,35 @@ void chooseRules(bool& specialRules)
     rulesActive = specialRules;
 }
 
-void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players, bool& specialRules, std::string& _wishedColor)
+void antiRageQuit(bool multiplayer)
+{
+    int selection;
+
+    std::cout << "Es gibt noch ein unbeendetes Spiel. Willst du das alte Spiel:" << std::endl
+        << "[1]\t fortsetzen oder speichern" << std::endl
+        << "[2]\t loeschen und neues Spiel starten" << std::endl
+        << "[3]\t Zurueck zum Menu" << std::endl;
+
+    std::cin >> selection;
+
+    switch (selection) {
+    case 1:
+        readSaveGame(4);
+        break;
+    case 2:
+        deleteSaveGame("./savegames/antiragequitsave.txt");
+        startGame(multiplayer);
+        break;
+    case 3:
+        clearScreen();
+        menu();
+        break;
+    default:
+        break;
+    }
+}
+
+void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vector<Player*>& players, bool& specialRules, std::string& _wishedColor) //Spiellogik
 {
     clearScreen();
 
@@ -520,27 +560,28 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                 players[currentPlayerID]->hasPlusFour = plusfour;
                 confirmNextPlayer(currentPlayer);
                 clearScreen();
-                //Speichern des aktuellen drawDecks
-                if (!actualDrawDeck.empty()) {
-                    actualDrawDeck.clear();
-                }
-                for (int i = 0; i < drawDeck.size(); i++) {
-                    //std::cout << drawDeck[i]->color << drawDeck[i]->number << std::endl;
-                    actualDrawDeck.push_back(drawDeck[i]);
-                }
-
-                //Speichern der aktuellen Player in externen Vektor
-                for (int i = 0; i < players.size(); i++) {
-                    playerScore.push_back(players[i]);
-                }
                 drawLine(currentPlayer);
                 std::cout << "Aktueller Spieler: " << currentPlayer->name << std::endl;
             }
 
+            
 
-            if (skip)
+            //Speichern der aktuellen Player in externen Vektor
+            for (int i = 0; i < players.size(); i++) {
+                playerScore.push_back(players[i]);
+            }
+            //Speichern des aktuellen drawDecks
+            if (!actualDrawDeck.empty()) {
+                actualDrawDeck.clear();
+            }
+            for (int i = 0; i < drawDeck.size(); i++) {
+                //std::cout << drawDeck[i]->color << drawDeck[i]->number << std::endl;
+                actualDrawDeck.push_back(drawDeck[i]);
+            }
+
+            if (skip) //Überprüfung ob Spieler aussetzen muss
             {
-
+                //Verschiedene Ausgabe wenn Bot oder echter Spieler
                 if (currentPlayer->bot)
                 {
                     std::cout << currentPlayer->name << " muss diese Runde aussetzen." << std::endl << std::endl;
@@ -557,11 +598,12 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
             {
                 if (currentPlayer->bot) //Bot am Zug
                 {
-                    if (plustwo > 0)
+                    if (plustwo > 0) //Überprüfung ob Bot Karten durch vorherige +2 Karetenaufziehen muss
                     {
                         bool hasPlusTwo = false;
                         Card* plusTwoCard = new Card;
                         int plusTwoIndex = 0;
+                        //Überprüfung ob Bot +2 Karten besitzt
                         for (Card* card : currentPlayer->playerCards)
                         {
                             if (card->number == 12)
@@ -591,11 +633,10 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                             plustwo = 0;
                         }
                     }
-                    else if (plusfour)
+                    else if (plusfour) //Überprüfung ob Bot 4 Aufziehen muss durch vorherige +4 karte
                     {
-                        /*
-                        * Spieler muss 4 Karten ziehen und darf keine Karte legen
-                        */
+                        //Spieler muss 4 Karten ziehen und darf keine Karte legen
+                        
                         std::cout << currentPlayer->name << " muss 4 Karten ziehen." << std::endl << std::endl;
                         for (int i = 0; i < 4; i++)
                         {
@@ -603,9 +644,8 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                         }
                         plusfour = false;
                     }
-                    else
+                    else //normaler Spielzug ohne einwirkung vorheriger Karten
                     {
-                        //Botlogik einbauen
                         Card* selectedCard = selectCardBOT(drawDeck, placeDeck, currentPlayer, wishedColor);
                         if (selectedCard != nullptr)
                         {
@@ -728,7 +768,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                 }
             }
 
-            if (currentPlayer->playerCards.size() == 0)
+            if (currentPlayer->playerCards.size() == 0) //Spieler ist fertig. Ausgabe mit Platzierung und Berechnung des Scores
             {
                 ranking.push_back(currentPlayer);
                 std::cout << currentPlayer->name << " ist fertig. Er belegt den " << ranking.size() << ". Platz" << std::endl;
@@ -786,6 +826,15 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
     clearScreen();
     std::cout << "Das Spiel ist zu Ende. Im Folgenden seht ihr die Rangliste des Spiels." << std::endl << std::endl;
 
+    for (int i = 0; i < ranking.size() - 1; i++) // Bestimmung der Rangbonuspunkte
+    {
+        int rankBoni = 0;
+        if (i == 0) rankBoni = 200;
+        else if (i == 1) rankBoni = 100;
+        else if (i == 2) rankBoni = 50;
+        ranking[i]->score += rankBoni;
+    }
+
     int rank = 1;
     for (Player* player : ranking)
     {
@@ -797,9 +846,8 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
     clearScreen();
 }
 
-void confirmNextPlayer(Player* player)
+void confirmNextPlayer(Player* player) // Erst zum naechsten Spieler wechseln, wenn er bereit ist, damit niemand anderes seine Karten sieht
 {
-    // Erst zum naechsten Spieler wechseln, wenn er bereit ist, damit niemand anderes seine Karten sieht
     bool correctInput = false;
     bool save = false;
     bool exitToMenu = false;
@@ -840,11 +888,12 @@ void confirmNextPlayer(Player* player)
         menu();
     }
     else if (exitToMenu) {
+        writeSaveGame(4);
         menu();
     }
 }
 
-void showPlaceDeck(std::vector<Card*>& placeDeck, std::string wishedColor)
+void showPlaceDeck(std::vector<Card*>& placeDeck, std::string wishedColor) //Anzeigen der obersten Karte auf dem Legestapel und der gewunschenen Farbe
 {
     Card* shownCard = placeDeck.front();
     std::string shownCardInfo = shownCard->getCardInfo();
@@ -857,7 +906,7 @@ void showPlaceDeck(std::vector<Card*>& placeDeck, std::string wishedColor)
     }
 }
 
-Card* selectCardBOT(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player, std::string wishedColor)
+Card* selectCardBOT(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player, std::string wishedColor) //Bestimmung der Karte, die der Bot legen soll
 {
     std::vector<Player*> ranking;
     Card* placeDeckCard = placeDeck.front(); //oberste Karte
@@ -883,7 +932,7 @@ Card* selectCardBOT(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck,
         stepcount = 0;
         if (!possibilities.empty())
         {
-            for (int num : possibilities)
+            for (int num : possibilities) //Auswahl der bestehenden Möglichkeiten anhand von Prioritäten.
             {
                 if (player->playerCards[num]->color == placeDeckCard->color && player->playerCards[num]->number < 10) // Auswahl gleicher Farbe mit beliebiger Nummer (keine Actionkarte)
                 {
@@ -920,7 +969,7 @@ Card* selectCardBOT(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck,
                 }
             }
         }
-        else
+        else //Wenn keine Karte möglich ist, Karte aufziehen. Wenn diese Legbar ist, wird sie gelegt
         {
             drawCard(drawDeck, player);
             if (checkCard(placeDeckCard, player->playerCards[player->playerCards.size() - 1], wishedColor))
@@ -930,7 +979,7 @@ Card* selectCardBOT(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck,
             }
         }
     }
-    else
+    else //Wenn sich eine andere Farbe gewuenscht wurde, dann wird nur auf diese Farbe überprüft
     {
         for (Card* card : player->playerCards)
         {
@@ -942,12 +991,22 @@ Card* selectCardBOT(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck,
             stepcount++;
         }
         stepcount = 0;
+
+        if (selectedCard == NULL) //Wenn keine Karte möglich ist, Karte aufziehen. Wenn diese Legbar ist, wird sie gelegt
+        {
+            drawCard(drawDeck, player);
+            if (checkCard(placeDeckCard, player->playerCards[player->playerCards.size() - 1], wishedColor))
+            {
+                selectedCard = player->playerCards[player->playerCards.size() - 1];
+                index = player->playerCards.size() - 1;
+            }
+        }
     }
     player->playerCards.erase(player->playerCards.begin() + index);
     return selectedCard;
 }
 
-Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player, std::string wishedColor)
+Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Player* player, std::string wishedColor) //Spieler wählt zu legende Karte aus
 {
     std::vector<Player*> ranking;
     Card* placeDeckCard = placeDeck.front();
@@ -961,7 +1020,7 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
         showPlaceDeck(placeDeck, wishedColor);
         drawLine(player);
         std::cout << "Deine Karten: " << std::endl;
-        printPlayerCards(player);
+        printPlayerCards(player->playerCards);
         drawLine(player);
         std::cout << "Bitte waehle die Karte, die gelegt werden soll." << std::endl;
         int index = 0;
@@ -972,7 +1031,7 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
             index++;
         }
 
-        if (!cardDrawn)
+        if (!cardDrawn) //Wenn keine Karte gezogen wurde, kann der Spieler noch eine ziehen
         {
             std::cout << "[" << index + 1 << "]\tKarte ziehen" << std::endl;
             std::cin >> selection;
@@ -1045,15 +1104,14 @@ Card* selectCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Pl
     return nullptr;
 }
 
-void drawCard(std::vector<Card*>& drawDeck, Player* player)
+void drawCard(std::vector<Card*>& drawDeck, Player* player) //Oberste Karte vom drawDeck wird gezogen
 {
-    // Karte ziehen
     Card* card = drawDeck.front();
     drawDeck.erase(drawDeck.begin());
     player->playerCards.push_back(card);
 }
 
-bool checkCard(Card* stackCard, Card* playerCard, std::string& wishedColor)
+bool checkCard(Card* stackCard, Card* playerCard, std::string& wishedColor) //Überprüfung ob gewählte Karte gelegt werden darf
 {
     std::string stackColor = stackCard->color;
     int stackNumber = stackCard->number;
@@ -1096,7 +1154,7 @@ bool checkCard(Card* stackCard, Card* playerCard, std::string& wishedColor)
     }
 }
 
-void placeCardByPlayer(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Card* card)
+void placeCardByPlayer(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, Card* card) //Karte von Spieler auf placeDeck legen
 {
     /*
     * Karte von Spieler auf placeDeck legen
@@ -1113,8 +1171,9 @@ void placeCardByPlayer(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDe
     shuffleDeck(drawDeck);
 }
 
-void executeAction(Card* card, bool& reverse, bool& skip, int& plustwo, bool& plusfour, std::string& wishedColor, Player* currentPlayer, bool specialRules, std::vector<Player*>& players)
+void executeAction(Card* card, bool& reverse, bool& skip, int& plustwo, bool& plusfour, std::string& wishedColor, Player* currentPlayer, bool specialRules, std::vector<Player*>& players) //Ausführung von Actionkarten
 {
+    //Aktionen von Actionkarten werden ausgeführt
     int number = card->number;
     std::string color = card->color;
 
@@ -1242,7 +1301,7 @@ void executeAction(Card* card, bool& reverse, bool& skip, int& plustwo, bool& pl
     }
 }
 
-int countCards(Player* player)
+int countCards(Player* player) //Zählt die Anzahl an Karten die ein Spieler hat
 {
     int count = 0;
     for (Card* card : player->playerCards)
@@ -1252,7 +1311,7 @@ int countCards(Player* player)
     return count;
 }
 
-void swapCards(Player* player1, Player* player2)
+void swapCards(Player* player1, Player* player2) //tauscht die Karten zweier Spieler
 {
     std::vector<Card*> tempCards;
     tempCards = player1->playerCards;
@@ -1260,7 +1319,7 @@ void swapCards(Player* player1, Player* player2)
     player2->playerCards = tempCards;
 }
 
-void wishColor(std::string& newColor, Player* player)
+void wishColor(std::string& newColor, Player* player) //Farbauswahl nach legen einer Farbwahlkarte
 {
     if (!player->bot)
     {
@@ -1270,7 +1329,7 @@ void wishColor(std::string& newColor, Player* player)
         {
             drawLine(player);
             std::cout << "Deine Karten: " << std::endl;
-            printPlayerCards(player);
+            printPlayerCards(player->playerCards);
             drawLine(player);
             for (Card* card : player->playerCards)
             {
@@ -1310,7 +1369,7 @@ void wishColor(std::string& newColor, Player* player)
         }
         wishedColorSave = newColor;
     }
-    else
+    else //Bot entscheidet nach Kriterium wieviele Karten er von welcher Fare hat
     {
         int reds = 0;
         int blues = 0;
@@ -1344,7 +1403,7 @@ void wishColor(std::string& newColor, Player* player)
     clearScreen();
 }
 
-void backToMenu()
+void backToMenu() //Gibt "Zum Menu zurück" Punkt aus und wartet auf eingabe
 {
     char selection;
     std::cout << std::endl << std::endl
@@ -1482,7 +1541,8 @@ void showRanking()
     backToMenu();
 }
 
-void saveGame(Player* player) {
+void saveGame(Player* player) //Auswahl von Spielstand auf welchem gespeichert werden soll
+{
     int selection;
 
     std::cout
@@ -1508,6 +1568,7 @@ void saveGame(Player* player) {
         std::cout << "Couldn´t resolve action." << std::endl;
         return;
     }
+    deleteSaveGame("./savegames/antiragequitsave.txt");
 }
 
 void writeSaveGame(int selection) {
@@ -1530,6 +1591,9 @@ void writeSaveGame(int selection) {
         break;
     case 3:
         scoresFile.open("./savegames/savegame3.txt");
+        break;
+    case 4:
+        scoresFile.open("./savegames/antiragequitsave.txt");
         break;
     default:
         std::cout << "Can´t open file." << std::endl;
@@ -1591,7 +1655,8 @@ void writeSaveGame(int selection) {
     scoresFile.close();
 }
 
-void loadSaveGame() {
+void loadSaveGame() //Auswahl welcher Spielstand geladen werden soll
+{
     bool correctInput = false;
     int selection;
     std::string sg1 = "./savegames/savegame1.txt";
@@ -1681,18 +1746,23 @@ void loadSaveGame() {
     }
 }
 
-void readSaveGame(int selection) {
+void readSaveGame(int selection) //Liest Speicherstände aus
+{
 
-    if (!playerDeckLoad.empty()) {
+    if (!playerDeckLoad.empty()) 
+    {
         playerDeckLoad.clear();
     }
-    if (!playerScoreLoad.empty()) {
+    if (!playerScoreLoad.empty()) 
+    {
         playerScoreLoad.clear();
     }
-    if (!cardColor.empty()) {
+    if (!cardColor.empty()) 
+    {
         cardColor.clear();
     }
-    if (!cardNumber.empty()) {
+    if (!cardNumber.empty()) 
+    {
         cardNumber.clear();
     }
 
@@ -1713,6 +1783,9 @@ void readSaveGame(int selection) {
         break;
     case 3:
         readScore.open("./savegames/savegame3.txt");
+        break;
+    case 4:
+        readScore.open("./savegames/antiragequitsave.txt");
         break;
     default:
         std::cout << "Can´t open file." << std::endl;
@@ -1741,7 +1814,7 @@ void readSaveGame(int selection) {
         {
             //Lesen der Spielerinformationen
             Player* player = new Player;
-           
+
             getline(readScore, reading);
             id = atoi(reading.c_str());
             player->id = id;
@@ -1889,7 +1962,7 @@ void readSaveGame(int selection) {
     }
 }
 
-void deleteSelection()
+void deleteSelection() //Auswahl welcher Spielstand gelöscht werden soll
 {
     int selection;
     int index = 1;
@@ -1943,7 +2016,7 @@ void deleteSelection()
     }
 }
 
-void printCard(Card* card)
+void printCard(Card* card) //Gibt einzelne Karte grafisch aus
 {
     std::ifstream f("Cards.txt");
     std::string reading;
@@ -1970,36 +2043,39 @@ void printCard(Card* card)
     }
 }
 
-void printPlayerCards(Player* player)
+void printPlayerCards(std::vector<Card*> playerCards) //Gibt alle Karten eines Spielers grafisch aus
 {
-    std::fstream f;
-    char cstring[256];
+    std::ifstream f;
+    std::string reading;
     std::vector<int> rows;
+    int count = 0;
 
-
-    for (int i = 0; i < player->playerCards.size(); i++)
+    for (int i = 0; i < playerCards.size(); i++)
     {
-        f.open("Cards.txt", std::ios::in);
-        int rowNumber = 0;
-        bool foundCard = false;
-
-        while (!f.eof() && !foundCard)
+        if (count < 7)
         {
-            f.getline(cstring, sizeof(cstring));
+            f.open("Cards.txt", std::ios::in);
+            int rowNumber = 0;
+            bool foundCard = false;
 
-            Card* card = player->playerCards[i];
-
-            if (cstring == card->getCardInfo())
+            while (!f.eof() && !foundCard)
             {
-                f.getline(cstring, sizeof(cstring));
-                std::cout << cstring << " ";
-                rows.push_back(rowNumber);
-                foundCard = true;
-                f.close();
+                getline(f, reading);
+                Card* card = playerCards[i];
+
+                if (reading == card->getCardInfo())
+                {
+                    getline(f, reading);
+                    std::cout << reading << " ";
+                    rows.push_back(rowNumber);
+                    foundCard = true;
+                    f.close();
+                }
+                rowNumber++;
             }
-            rowNumber++;
+            count++;
+            f.close();
         }
-        f.close();
     }
     std::cout << std::endl;
     for (int i = 0; i < 7; i++)
@@ -2009,18 +2085,29 @@ void printPlayerCards(Player* player)
             f.open("Cards.txt", std::ios::in);
             for (int k = 0; k < rows[j] + 2; k++)
             {
-                f.getline(cstring, sizeof(cstring));
+                getline(f, reading);
             }
             rows[j] = rows[j] + 1;
-            f.getline(cstring, sizeof(cstring));
-            std::cout << cstring << " ";
+            getline(f, reading);
+            std::cout << reading << " ";
             f.close();
         }
         std::cout << std::endl;
     }
+
+    if (playerCards.size() > 7)
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            playerCards.erase(playerCards.begin());
+        }
+        printPlayerCards(playerCards);
+    }
+
 }
 
-bool resolve(std::string in) {
+bool resolve(std::string in)
+{
     bool op;
     if (in == "1") {
         op = true;
@@ -2031,7 +2118,7 @@ bool resolve(std::string in) {
     return op;
 }
 
-bool fileEmpty(std::string filePath)
+bool fileEmpty(std::string filePath) //Überprüft ob Datei in Pfad leer ist
 {
     std::ifstream readScore;
     std::string reading;
@@ -2049,7 +2136,7 @@ bool fileEmpty(std::string filePath)
     return isEmpty;
 }
 
-void deleteSaveGame(std::string filePath)
+void deleteSaveGame(std::string filePath) //Löscht Spielstand in Pfad
 {
     std::ofstream scoresFile;
     scoresFile.open(filePath);
@@ -2057,12 +2144,14 @@ void deleteSaveGame(std::string filePath)
     scoresFile.close();
 }
 
-void drawLine(Player* player)
+void drawLine(Player* player) //Gibt Linie von Länge der Anzahl an Karten aus
 {
     if (player != NULL)
     {
         int cards = player->playerCards.size();
-        int linelength = 13 * cards - 1;
+        int linelength = 0;
+        if (cards < 7) linelength = 13 * cards - 1;
+        else linelength = 13 * 7 - 1;
 
         for (int i = 0; i < linelength; i++) std::cout << "=";
         std::cout << std::endl;
@@ -2074,14 +2163,10 @@ void drawLine(Player* player)
     }
 }
 
-void clearScreen()
+void clearScreen() //Cleart die Konsole
 {
-    std::cout << "\n\n\n\n";
-
-    /*
     for (int i = 0; i < 10; i++)
     {
         std::cout << "\n\n\n\n\n\n\n\n\n\n";
     }
-    */
 }
