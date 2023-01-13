@@ -20,148 +20,148 @@ std::string Card::getCardInfo()
     {
         switch (number)
         {
-        case 0: cardInfo = "Rote 0";
-            break;
-        case 1: cardInfo = "Rote 1";
-            break;
-        case 2: cardInfo = "Rote 2";
-            break;
-        case 3: cardInfo = "Rote 3";
-            break;
-        case 4: cardInfo = "Rote 4";
-            break;
-        case 5: cardInfo = "Rote 5";
-            break;
-        case 6: cardInfo = "Rote 6";
-            break;
-        case 7: cardInfo = "Rote 7";
-            break;
-        case 8: cardInfo = "Rote 8";
-            break;
-        case 9: cardInfo = "Rote 9";
-            break;
-        case 10: cardInfo = "Rote \"Aussetzen\"-Karte";
-            break;
-        case 11: cardInfo = "Rote \"Richtungswechsel\"-Karte";
-            break;
-        case 12: cardInfo = "Rote \"Zwei Ziehen\"-Karte";
-            break;
-        default: cardInfo = "Karte nicht verfuegbar.";
-            break;
+            case 0: cardInfo = "Rote 0";
+                break;
+            case 1: cardInfo = "Rote 1";
+                break;
+            case 2: cardInfo = "Rote 2";
+                break;
+            case 3: cardInfo = "Rote 3";
+                break;
+            case 4: cardInfo = "Rote 4";
+                break;
+            case 5: cardInfo = "Rote 5";
+                break;
+            case 6: cardInfo = "Rote 6";
+                break;
+            case 7: cardInfo = "Rote 7";
+                break;
+            case 8: cardInfo = "Rote 8";
+                break;
+            case 9: cardInfo = "Rote 9";
+                break;
+            case 10: cardInfo = "Rote \"Aussetzen\"-Karte";
+                break;
+            case 11: cardInfo = "Rote \"Richtungswechsel\"-Karte";
+                break;
+            case 12: cardInfo = "Rote \"Zwei Ziehen\"-Karte";
+                break;
+            default: cardInfo = "Karte nicht verfuegbar.";
+                break;
         }
     }
     else if (color == "blau")
     {
         switch (number)
         {
-        case 0: cardInfo = "Blaue 0";
-            break;
-        case 1: cardInfo = "Blaue 1";
-            break;
-        case 2: cardInfo = "Blaue 2";
-            break;
-        case 3: cardInfo = "Blaue 3";
-            break;
-        case 4: cardInfo = "Blaue 4";
-            break;
-        case 5: cardInfo = "Blaue 5";
-            break;
-        case 6: cardInfo = "Blaue 6";
-            break;
-        case 7: cardInfo = "Blaue 7";
-            break;
-        case 8: cardInfo = "Blaue 8";
-            break;
-        case 9: cardInfo = "Blaue 9";
-            break;
-        case 10: cardInfo = "Blaue \"Aussetzen\"-Karte";
-            break;
-        case 11: cardInfo = "Blaue \"Richtungswechsel\"-Karte";
-            break;
-        case 12: cardInfo = "Blaue \"Zwei Ziehen\"-Karte";
-            break;
-        default: cardInfo = "Karte nicht verfuegbar.";
-            break;
+            case 0: cardInfo = "Blaue 0";
+                break;
+            case 1: cardInfo = "Blaue 1";
+                break;
+            case 2: cardInfo = "Blaue 2";
+                break;
+            case 3: cardInfo = "Blaue 3";
+                break;
+            case 4: cardInfo = "Blaue 4";
+                break;
+            case 5: cardInfo = "Blaue 5";
+                break;
+            case 6: cardInfo = "Blaue 6";
+                break;
+            case 7: cardInfo = "Blaue 7";
+                break;
+            case 8: cardInfo = "Blaue 8";
+                break;
+            case 9: cardInfo = "Blaue 9";
+                break;
+            case 10: cardInfo = "Blaue \"Aussetzen\"-Karte";
+                break;
+            case 11: cardInfo = "Blaue \"Richtungswechsel\"-Karte";
+                break;
+            case 12: cardInfo = "Blaue \"Zwei Ziehen\"-Karte";
+                break;
+            default: cardInfo = "Karte nicht verfuegbar.";
+                break;
         }
     }
     else if (color == "gruen")
     {
         switch (number)
         {
-        case 0: cardInfo = "Gruene 0";
-            break;
-        case 1: cardInfo = "Gruene 1";
-            break;
-        case 2: cardInfo = "Gruene 2";
-            break;
-        case 3: cardInfo = "Gruene 3";
-            break;
-        case 4: cardInfo = "Gruene 4";
-            break;
-        case 5: cardInfo = "Gruene 5";
-            break;
-        case 6: cardInfo = "Gruene 6";
-            break;
-        case 7: cardInfo = "Gruene 7";
-            break;
-        case 8: cardInfo = "Gruene 8";
-            break;
-        case 9: cardInfo = "Gruene 9";
-            break;
-        case 10: cardInfo = "Gruene \"Aussetzen\"-Karte";
-            break;
-        case 11: cardInfo = "Gruene \"Richtungswechsel\"-Karte";
-            break;
-        case 12: cardInfo = "Gruene \"Zwei Ziehen\"-Karte";
-            break;
-        default: cardInfo = "Karte nicht verfuegbar.";
-            break;
+            case 0: cardInfo = "Gruene 0";
+                break;
+            case 1: cardInfo = "Gruene 1";
+                break;
+            case 2: cardInfo = "Gruene 2";
+                break;
+            case 3: cardInfo = "Gruene 3";
+                break;
+            case 4: cardInfo = "Gruene 4";
+                break;
+            case 5: cardInfo = "Gruene 5";
+                break;
+            case 6: cardInfo = "Gruene 6";
+                break;
+            case 7: cardInfo = "Gruene 7";
+                break;
+            case 8: cardInfo = "Gruene 8";
+                break;
+            case 9: cardInfo = "Gruene 9";
+                break;
+            case 10: cardInfo = "Gruene \"Aussetzen\"-Karte";
+                break;
+            case 11: cardInfo = "Gruene \"Richtungswechsel\"-Karte";
+                break;
+            case 12: cardInfo = "Gruene \"Zwei Ziehen\"-Karte";
+                break;
+            default: cardInfo = "Karte nicht verfuegbar.";
+                break;
         }
     }
     else if (color == "gelb")
     {
         switch (number)
         {
-        case 0: cardInfo = "Gelbe 0";
-            break;
-        case 1: cardInfo = "Gelbe 1";
-            break;
-        case 2: cardInfo = "Gelbe 2";
-            break;
-        case 3: cardInfo = "Gelbe 3";
-            break;
-        case 4: cardInfo = "Gelbe 4";
-            break;
-        case 5: cardInfo = "Gelbe 5";
-            break;
-        case 6: cardInfo = "Gelbe 6";
-            break;
-        case 7: cardInfo = "Gelbe 7";
-            break;
-        case 8: cardInfo = "Gelbe 8";
-            break;
-        case 9: cardInfo = "Gelbe 9";
-            break;
-        case 10: cardInfo = "Gelbe \"Aussetzen\"-Karte";
-            break;
-        case 11: cardInfo = "Gelbe \"Richtungswechsel\"-Karte";
-            break;
-        case 12: cardInfo = "Gelbe \"Zwei Ziehen\"-Karte";
-            break;
-        default: cardInfo = "Karte nicht verfuegbar.";
-            break;
+            case 0: cardInfo = "Gelbe 0";
+                break;
+            case 1: cardInfo = "Gelbe 1";
+                break;
+            case 2: cardInfo = "Gelbe 2";
+                break;
+            case 3: cardInfo = "Gelbe 3";
+                break;
+            case 4: cardInfo = "Gelbe 4";
+                break;
+            case 5: cardInfo = "Gelbe 5";
+                break;
+            case 6: cardInfo = "Gelbe 6";
+                break;
+            case 7: cardInfo = "Gelbe 7";
+                break;
+            case 8: cardInfo = "Gelbe 8";
+                break;
+            case 9: cardInfo = "Gelbe 9";
+                break;
+            case 10: cardInfo = "Gelbe \"Aussetzen\"-Karte";
+                break;
+            case 11: cardInfo = "Gelbe \"Richtungswechsel\"-Karte";
+                break;
+            case 12: cardInfo = "Gelbe \"Zwei Ziehen\"-Karte";
+                break;
+            default: cardInfo = "Karte nicht verfuegbar.";
+                break;
         }
     }
     else if (color == "schwarz")
     {
         switch (number)
         {
-        case 0: cardInfo = "\"Farbwechsel\"-Karte";
-            break;
-        case 1: cardInfo = "\"Farbwechsel + 4\"-Karte";
-            break;
-        default: cardInfo = "Karte nicht verfuegbar.";
-            break;
+            case 0: cardInfo = "\"Farbwechsel\"-Karte";
+                break;
+            case 1: cardInfo = "\"Farbwechsel + 4\"-Karte";
+                break;
+            default: cardInfo = "Karte nicht verfuegbar.";
+                break;
         }
     }
     return cardInfo;
@@ -194,12 +194,12 @@ void menu() //gibt das Menu aus und leitet je nach Input weiter
     intro();
     int selection;
     std::cout
-        << "[1]\t Singleplayer" << std::endl
-        << "[2]\t Multiplayer" << std::endl
-        << "[3]\t Regeln anzeigen" << std::endl
-        << "[4]\t Rangliste anzeigen" << std::endl
-        << "[5]\t Spiel laden" << std::endl
-        << "[ELSE]\t Beenden" << std::endl;
+            << "[1]\t Singleplayer" << std::endl
+            << "[2]\t Multiplayer" << std::endl
+            << "[3]\t Regeln anzeigen" << std::endl
+            << "[4]\t Rangliste anzeigen" << std::endl
+            << "[5]\t Spiel laden" << std::endl
+            << "[ELSE]\t Beenden" << std::endl;
 
     std::cin >> selection;
 
@@ -207,19 +207,19 @@ void menu() //gibt das Menu aus und leitet je nach Input weiter
 
     switch (selection)
     {
-    case 1: startGame(false);
-        break;
-    case 2: startGame(true);
-        break;
-    case 3: showRules();
-        break;
-    case 4: showRanking();
-        break;
-    case 5: loadSaveGame();
-        break;
-    default:
-        exit(3);
-        return;
+        case 1: startGame(false);
+            break;
+        case 2: startGame(true);
+            break;
+        case 3: showRules();
+            break;
+        case 4: showRanking();
+            break;
+        case 5: loadSaveGame();
+            break;
+        default:
+            exit(3);
+            return;
     }
 }
 
@@ -505,26 +505,26 @@ void antiRageQuit(bool multiplayer)
     int selection;
 
     std::cout << "Es gibt noch ein unbeendetes Spiel. Willst du das alte Spiel:" << std::endl
-        << "[1]\t fortsetzen oder speichern" << std::endl
-        << "[2]\t loeschen und neues Spiel starten" << std::endl
-        << "[3]\t Zurueck zum Menu" << std::endl;
+              << "[1]\t fortsetzen oder speichern" << std::endl
+              << "[2]\t loeschen und neues Spiel starten" << std::endl
+              << "[3]\t Zurueck zum Menu" << std::endl;
 
     std::cin >> selection;
 
     switch (selection) {
-    case 1:
-        readSaveGame(4);
-        break;
-    case 2:
-        deleteSaveGame("./savegames/antiragequitsave.txt");
-        startGame(multiplayer);
-        break;
-    case 3:
-        clearScreen();
-        menu();
-        break;
-    default:
-        break;
+        case 1:
+            readSaveGame(4);
+            break;
+        case 2:
+            deleteSaveGame("./savegames/antiragequitsave.txt");
+            startGame(multiplayer);
+            break;
+        case 3:
+            clearScreen();
+            menu();
+            break;
+        default:
+            break;
     }
 }
 
@@ -698,7 +698,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                                 showPlaceDeck(placeDeck, wishedColor);
                                 drawLine(currentPlayer);
                                 std::cout << "Moechtest du deine \"+2\"-Karte legen?" << std::endl
-                                    << "Wenn nein, musst du " << plustwo << " Karten ziehen. [y|n]" << std::endl;
+                                          << "Wenn nein, musst du " << plustwo << " Karten ziehen. [y|n]" << std::endl;
                                 std::cin >> choice;
                                 if (choice == 'y' || choice == 'n')
                                 {
@@ -856,9 +856,9 @@ void confirmNextPlayer(Player* player) // Erst zum naechsten Spieler wechseln, w
     {
         std::string confirmPlayer;
         std::cout << "Der naechste Spieler ist " << player->name << "." << std::endl << std::endl
-            << "Bitte mit [y] bestaetigen, dass gewechselt werden kann." << std::endl
-            << "Bitte mit [s] das Speichern des Spiels bestaetigen." << std::endl
-            << "Bitte mit [x] das Beenden des Spiels bestaetigen." << std::endl;
+                  << "Bitte mit [y] bestaetigen, dass gewechselt werden kann." << std::endl
+                  << "Bitte mit [s] das Speichern des Spiels bestaetigen." << std::endl
+                  << "Bitte mit [x] das Beenden des Spiels bestaetigen." << std::endl;
         std::cin >> confirmPlayer;
 
         if (confirmPlayer == "y")
@@ -1181,122 +1181,122 @@ void executeAction(Card* card, bool& reverse, bool& skip, int& plustwo, bool& pl
     {
         switch (number)
         {
-        case 10: skip = true;
-            break;
-        case 11:
-            if (!reverse)
-            {
-                reverse = true;
-            }
-            else
-            {
-                reverse = false;
-            }
-            break;
-        case 12: plustwo += 2;
-            break;
-        default:
-            if (specialRules)
-            {
-                std::vector<Card*> tempCards;
-                int shownIndex = 0;
-                int trueIndex = 0;
-                std::vector<int> cardCounts;
-                std::vector<int> indices;
-                switch (number)
+            case 10: skip = true;
+                break;
+            case 11:
+                if (!reverse)
                 {
-                case 0:
-                    if (reverse)
+                    reverse = true;
+                }
+                else
+                {
+                    reverse = false;
+                }
+                break;
+            case 12: plustwo += 2;
+                break;
+            default:
+                if (specialRules)
+                {
+                    std::vector<Card*> tempCards;
+                    int shownIndex = 0;
+                    int trueIndex = 0;
+                    std::vector<int> cardCounts;
+                    std::vector<int> indices;
+                    switch (number)
                     {
-                        tempCards = players[0]->playerCards;
-                        for (int i = 0; i < players.size() - 1; i++)
-                        {
-                            players[i]->playerCards = players[i + 1]->playerCards;
-                        }
-                        players[players.size() - 1]->playerCards = tempCards;
-                    }
-                    else
-                    {
-                        tempCards = players[players.size() - 1]->playerCards;
-                        for (int i = players.size() - 1; i > 0; i--)
-                        {
-                            players[i]->playerCards = players[i - 1]->playerCards;
-                        }
-                        players[0]->playerCards = tempCards;
-                    }
-
-                    std::cout << "Die Karten jedes Spielers wurden in Spielrichtung weitergegeben." << std::endl;
-                    break;
-                case 7:
-
-                    for (Player* player : players)
-                    {
-                        if (currentPlayer->name != player->name)
-                        {
-                            std::cout << "[" << shownIndex + 1 << "] " << player->name << " hat " << countCards(player) << " Karten" << std::endl;
-                            cardCounts.push_back(countCards(player));
-                            indices.push_back(trueIndex);
-                            shownIndex++;
-                        }
-                        trueIndex++;
-                    }
-                    if (currentPlayer->bot)
-                    {
-                        int choice = cardCounts[0];
-                        for (int i = 0; i < cardCounts.size(); i++)
-                        {
-                            if (choice < cardCounts[i])
+                        case 0:
+                            if (reverse)
                             {
-                                choice = cardCounts[i];
+                                tempCards = players[0]->playerCards;
+                                for (int i = 0; i < players.size() - 1; i++)
+                                {
+                                    players[i]->playerCards = players[i + 1]->playerCards;
+                                }
+                                players[players.size() - 1]->playerCards = tempCards;
                             }
-                        }
-                        //Fuer jeden Spieler wird ueberprueft ob Choice der Kartenzahl des Spielers uebereinstimmt und der gewaehlte Spieler nicht der aktuelle spieler ist.
-                        for (Player* player : players)
-                        {
-                            if (choice == countCards(player) && player != currentPlayer)
-                                swapCards(currentPlayer, players[indices[0]]);
-                        }
-                    }
-                    else
-                    {
-                        int selection;
-                        std::cout << "Mit welchem Spieler moechtest du deine Karten tauschen?" << std::endl;
-                        std::cin >> selection;
+                            else
+                            {
+                                tempCards = players[players.size() - 1]->playerCards;
+                                for (int i = players.size() - 1; i > 0; i--)
+                                {
+                                    players[i]->playerCards = players[i - 1]->playerCards;
+                                }
+                                players[0]->playerCards = tempCards;
+                            }
 
-                        switch (selection)
-                        {
-                        case 1:
-                            swapCards(currentPlayer, players[indices[0]]);
+                            std::cout << "Die Karten jedes Spielers wurden in Spielrichtung weitergegeben." << std::endl;
                             break;
-                        case 2:
-                            swapCards(currentPlayer, players[indices[1]]);
-                            break;
-                        case 3:
-                            swapCards(currentPlayer, players[indices[2]]);
+                        case 7:
+
+                            for (Player* player : players)
+                            {
+                                if (currentPlayer->name != player->name)
+                                {
+                                    std::cout << "[" << shownIndex + 1 << "] " << player->name << " hat " << countCards(player) << " Karten" << std::endl;
+                                    cardCounts.push_back(countCards(player));
+                                    indices.push_back(trueIndex);
+                                    shownIndex++;
+                                }
+                                trueIndex++;
+                            }
+                            if (currentPlayer->bot)
+                            {
+                                int choice = cardCounts[0];
+                                for (int i = 0; i < cardCounts.size(); i++)
+                                {
+                                    if (choice < cardCounts[i])
+                                    {
+                                        choice = cardCounts[i];
+                                    }
+                                }
+                                //Fuer jeden Spieler wird ueberprueft ob Choice der Kartenzahl des Spielers uebereinstimmt und der gewaehlte Spieler nicht der aktuelle spieler ist.
+                                for (Player* player : players)
+                                {
+                                    if (choice == countCards(player) && player != currentPlayer)
+                                        swapCards(currentPlayer, players[indices[0]]);
+                                }
+                            }
+                            else
+                            {
+                                int selection;
+                                std::cout << "Mit welchem Spieler moechtest du deine Karten tauschen?" << std::endl;
+                                std::cin >> selection;
+
+                                switch (selection)
+                                {
+                                    case 1:
+                                        swapCards(currentPlayer, players[indices[0]]);
+                                        break;
+                                    case 2:
+                                        swapCards(currentPlayer, players[indices[1]]);
+                                        break;
+                                    case 3:
+                                        swapCards(currentPlayer, players[indices[2]]);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
                             break;
                         default:
                             break;
-                        }
                     }
-                    break;
-                default:
-                    break;
                 }
-            }
-            break;
+                break;
         }
     }
     else
     {
         switch (number)
         {
-        case 0: wishColor(wishedColor, currentPlayer);
-            break;
-        case 1: wishColor(wishedColor, currentPlayer);
-            plusfour = true;
-            break;
-        default:
-            break;
+            case 0: wishColor(wishedColor, currentPlayer);
+                break;
+            case 1: wishColor(wishedColor, currentPlayer);
+                plusfour = true;
+                break;
+            default:
+                break;
         }
     }
 }
@@ -1337,10 +1337,10 @@ void wishColor(std::string& newColor, Player* player) //Farbauswahl nach legen e
             }
             drawLine(player);
             std::cout << std::endl << "Bitte waehle die Farbe, die du dir wuenschst." << std::endl
-                << "[1]\tRot" << std::endl
-                << "[2]\tGruen" << std::endl
-                << "[3]\tBlau" << std::endl
-                << "[4]\tGelb" << std::endl;
+                      << "[1]\tRot" << std::endl
+                      << "[2]\tGruen" << std::endl
+                      << "[3]\tBlau" << std::endl
+                      << "[4]\tGelb" << std::endl;
             std::cin >> selection;
             if (selection == '1' || selection == '2' || selection == '3' || selection == '4')
             {
@@ -1356,16 +1356,16 @@ void wishColor(std::string& newColor, Player* player) //Farbauswahl nach legen e
         }
         switch (selection)
         {
-        case '1': newColor = "rot";
-            break;
-        case '2': newColor = "gruen";
-            break;
-        case '3': newColor = "blau";
-            break;
-        case '4': newColor = "gelb";
-            break;
-        default:
-            break;
+            case '1': newColor = "rot";
+                break;
+            case '2': newColor = "gruen";
+                break;
+            case '3': newColor = "blau";
+                break;
+            case '4': newColor = "gelb";
+                break;
+            default:
+                break;
         }
         wishedColorSave = newColor;
     }
@@ -1407,8 +1407,8 @@ void backToMenu() //Gibt "Zum Menu zurück" Punkt aus und wartet auf eingabe
 {
     char selection;
     std::cout << std::endl << std::endl
-        << "[m] Zum Menue zurueckkehren" << std::endl
-        << "[ELSE] Beenden" << std::endl;
+              << "[m] Zum Menue zurueckkehren" << std::endl
+              << "[ELSE] Beenden" << std::endl;
     std::cin >> selection;
     clearScreen();
     if (selection == 'm')
@@ -1544,29 +1544,43 @@ void showRanking()
 void saveGame(Player* player) //Auswahl von Spielstand auf welchem gespeichert werden soll
 {
     int selection;
+    std::string sg1 = "./savegames/savegame1.txt";
+    std::string sg2 = "./savegames/savegame2.txt";
+    std::string sg3 = "./savegames/savegame3.txt";
 
-    std::cout
-        << "Waehle den gewuenschten Speicherstand aus." << std::endl
-        << "[1]\t Speicherstand 1" << std::endl
-        << "[2]\t Speicherstand 2" << std::endl
-        << "[3]\t Speicherstand 3" << std::endl
-        << "[4]\t Zurueck zum Spiel" << std::endl;
+    std::cout << "Waehle den gewuenschten Speicherstand aus." << std::endl;
+    if (fileEmpty(sg1))
+        std::cout << "[1]\t Speicherstand 1 [leer]" << std::endl;
+    else
+        std::cout << "[1]\t Speicherstand 1 [voll]" << std::endl;
+
+    if (fileEmpty(sg2))
+        std::cout << "[2]\t Speicherstand 2 [leer]" << std::endl;
+    else
+        std::cout << "[2]\t Speicherstand 2 [voll]" << std::endl;
+
+    if (fileEmpty(sg3))
+        std::cout << "[3]\t Speicherstand 3 [leer]" << std::endl;
+    else
+        std::cout << "[3]\t Speicherstand 3 [voll]" << std::endl;
+
+    std::cout << "[4]\t Zurueck zum Spiel" << std::endl;
 
     std::cin >> selection;
 
     switch (selection)
     {
-    case 1: writeSaveGame(selection);
-        break;
-    case 2: writeSaveGame(selection);
-        break;
-    case 3: writeSaveGame(selection);
-        break;
-    case 4: confirmNextPlayer(player);
-        break;
-    default:
-        std::cout << "Couldn´t resolve action." << std::endl;
-        return;
+        case 1: writeSaveGame(selection);
+            break;
+        case 2: writeSaveGame(selection);
+            break;
+        case 3: writeSaveGame(selection);
+            break;
+        case 4: confirmNextPlayer(player);
+            break;
+        default:
+            std::cout << "Couldn´t resolve action." << std::endl;
+            return;
     }
     deleteSaveGame("./savegames/antiragequitsave.txt");
 }
@@ -1583,21 +1597,21 @@ void writeSaveGame(int selection) {
 
     switch (selection)
     {
-    case 1:
-        scoresFile.open("./savegames/savegame1.txt");
-        break;
-    case 2:
-        scoresFile.open("./savegames/savegame2.txt");
-        break;
-    case 3:
-        scoresFile.open("./savegames/savegame3.txt");
-        break;
-    case 4:
-        scoresFile.open("./savegames/antiragequitsave.txt");
-        break;
-    default:
-        std::cout << "Can´t open file." << std::endl;
-        break;
+        case 1:
+            scoresFile.open("./savegames/savegame1.txt");
+            break;
+        case 2:
+            scoresFile.open("./savegames/savegame2.txt");
+            break;
+        case 3:
+            scoresFile.open("./savegames/savegame3.txt");
+            break;
+        case 4:
+            scoresFile.open("./savegames/antiragequitsave.txt");
+            break;
+        default:
+            std::cout << "Can´t open file." << std::endl;
+            break;
     }
 
     //Angaben, wie viele Zeilen vorhanden sind
@@ -1688,60 +1702,60 @@ void loadSaveGame() //Auswahl welcher Spielstand geladen werden soll
         std::cin >> selection;
         switch (selection)
         {
-        case 1:
-            if (!fileEmpty(sg1))
-            {
-                readSaveGame(selection);
+            case 1:
+                if (!fileEmpty(sg1))
+                {
+                    readSaveGame(selection);
+                    correctInput = true;
+                }
+                else
+                {
+                    std::cout << "==========================================" << std::endl
+                              << "Spielstand leer. Waehle einen anderen aus." << std::endl
+                              << "==========================================" << std::endl;
+                    loadSaveGame();
+                }
+                break;
+            case 2:
+                if (!fileEmpty(sg2))
+                {
+                    readSaveGame(selection);
+                    correctInput = true;
+                }
+                else
+                {
+                    std::cout << "==========================================" << std::endl
+                              << "Spielstand leer. Waehle einen anderen aus." << std::endl
+                              << "==========================================" << std::endl;
+                    loadSaveGame();
+                }
+                break;
+            case 3:
+                if (!fileEmpty(sg3))
+                {
+                    readSaveGame(selection);
+                    correctInput = true;
+                }
+                else
+                {
+                    std::cout << "==========================================" << std::endl
+                              << "Spielstand leer. Waehle einen anderen aus." << std::endl
+                              << "==========================================" << std::endl;
+                    loadSaveGame();
+                }
+                break;
+            case 4:
+                deleteSelection();
                 correctInput = true;
-            }
-            else
-            {
-                std::cout << "==========================================" << std::endl
-                    << "Spielstand leer. Waehle einen anderen aus." << std::endl
-                    << "==========================================" << std::endl;
-                loadSaveGame();
-            }
-            break;
-        case 2:
-            if (!fileEmpty(sg2))
-            {
-                readSaveGame(selection);
+                break;
+            case 5:
+                clearScreen();
+                menu();
                 correctInput = true;
-            }
-            else
-            {
-                std::cout << "==========================================" << std::endl
-                    << "Spielstand leer. Waehle einen anderen aus." << std::endl
-                    << "==========================================" << std::endl;
-                loadSaveGame();
-            }
-            break;
-        case 3:
-            if (!fileEmpty(sg3))
-            {
-                readSaveGame(selection);
-                correctInput = true;
-            }
-            else
-            {
-                std::cout << "==========================================" << std::endl
-                    << "Spielstand leer. Waehle einen anderen aus." << std::endl
-                    << "==========================================" << std::endl;
-                loadSaveGame();
-            }
-            break;
-        case 4:
-            deleteSelection();
-            correctInput = true;
-            break;
-        case 5:
-            clearScreen();
-            menu();
-            correctInput = true;
-            break;
-        default:
-            std::cout << "Couldn´t resolve action." << std::endl;
-            break;
+                break;
+            default:
+                std::cout << "Couldn´t resolve action." << std::endl;
+                break;
         }
     }
 }
@@ -1775,21 +1789,21 @@ void readSaveGame(int selection) //Liest Speicherstände aus
 
     switch (selection)
     {
-    case 1:
-        readScore.open("./savegames/savegame1.txt");
-        break;
-    case 2:
-        readScore.open("./savegames/savegame2.txt");
-        break;
-    case 3:
-        readScore.open("./savegames/savegame3.txt");
-        break;
-    case 4:
-        readScore.open("./savegames/antiragequitsave.txt");
-        break;
-    default:
-        std::cout << "Can´t open file." << std::endl;
-        break;
+        case 1:
+            readScore.open("./savegames/savegame1.txt");
+            break;
+        case 2:
+            readScore.open("./savegames/savegame2.txt");
+            break;
+        case 3:
+            readScore.open("./savegames/savegame3.txt");
+            break;
+        case 4:
+            readScore.open("./savegames/antiragequitsave.txt");
+            break;
+        default:
+            std::cout << "Can´t open file." << std::endl;
+            break;
     }
     if (readScore.is_open()) {
 
@@ -1997,20 +2011,20 @@ void deleteSelection() //Auswahl welcher Spielstand gelöscht werden soll
         std::cin >> selection;
         switch (selection)
         {
-        case 1:
-            deleteSaveGame(sg1);
-            std::cout << "Spielstand 1 erfolgreich geloescht." << std::endl;
-            break;
-        case 2:
-            deleteSaveGame(sg2);
-            std::cout << "Spielstand 2 erfolgreich geloescht." << std::endl;
-            break;
-        case 3:
-            deleteSaveGame(sg3);
-            std::cout << "Spielstand 3 erfolgreich geloescht." << std::endl;
-            break;
-        default:
-            break;
+            case 1:
+                deleteSaveGame(sg1);
+                std::cout << "Spielstand 1 erfolgreich geloescht." << std::endl;
+                break;
+            case 2:
+                deleteSaveGame(sg2);
+                std::cout << "Spielstand 2 erfolgreich geloescht." << std::endl;
+                break;
+            case 3:
+                deleteSaveGame(sg3);
+                std::cout << "Spielstand 3 erfolgreich geloescht." << std::endl;
+                break;
+            default:
+                break;
         }
         loadSaveGame();
     }
