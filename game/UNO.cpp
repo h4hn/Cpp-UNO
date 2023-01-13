@@ -782,8 +782,6 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
                         b += _player->playerCards.size();
                     }
                 }
-                std::cout << "b: " << b << "; a: " << a << std::endl;
-
                 int newScore = (int)((1.0 / a) * 2000.0) + b;
 
                 currentPlayer->score = newScore;
