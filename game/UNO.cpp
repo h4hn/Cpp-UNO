@@ -194,6 +194,7 @@ void intro() //gibt den Intro Screen aus
 void menu() //gibt das Menu aus und leitet je nach Input weiter
 {
     intro();
+
     int selection;
     std::cout
         << "[1]\t Singleplayer" << std::endl
@@ -249,10 +250,8 @@ void showRules() // zeigt die Spielregeln
     menu();
 }
 
-void startGame(bool multiplayer) //erstellt alle nötigen Objekte zum Spielen
+void startGame(bool multiplayer) // Erstellt alle nötigen Objekte zum Spielen und startet das Spiel. Am Ende werden die erstellten Objekte wieder gelöscht.
 {
-
-
     if (fileEmpty("./savegames/antiragequitsave.txt"))
     {
         clearScreen();
@@ -777,7 +776,7 @@ void game(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck, std::vect
             if (currentPlayer->playerCards.size() == 0) //Spieler ist fertig. Ausgabe mit Platzierung und Berechnung des Scores
             {
                 ranking.push_back(currentPlayer);
-                std::cout << currentPlayer->name << " ist fertig. Er belegt den " << ranking.size() << ". Platz" << std::endl;
+                std::cout << currentPlayer->name << " ist fertig. Er belegt den " << ranking.size() << ". Platz" << std::endl << std::endl;
 
                 int a = currentPlayer->laidCards;
                 int b = 0;
@@ -1455,7 +1454,7 @@ void saveScores(std::vector<Player*>& players) //Speicher die in dieser Runder g
                 int points = atoi(pointsStr.c_str());
                 if (points > MAX_POINTS)
                 {
-                    points = MAX_POINTS;
+                    MAX_POINTS = points;
                 }
                 line.erase(0, line.find(strSplitter) + strSplitter.length());
                 ranking[points] = line;
@@ -1541,7 +1540,7 @@ void showRanking() //Liest das aktuelle Ranking aus der Scores-Datei aus und gib
         }
         else
         {
-            std::cout << i << ": " << ranking[i] << std::endl;
+            std::cout << i << " Punkte:\t" << ranking[i] << std::endl;
         }
         rank++;
     }
