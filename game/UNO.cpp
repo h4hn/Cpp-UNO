@@ -450,6 +450,18 @@ void distributeCards(std::vector<Card*>& drawDeck, std::vector<Player*>& players
             player->playerCards.push_back(drawnCard);
         }
     }
+    //Speichern der aktuellen Player in externen Vektor
+    for (int i = 0; i < players.size(); i++) {
+        playerScore.push_back(players[i]);
+    }
+    //Speichern des aktuellen drawDecks
+    if (!actualDrawDeck.empty()) {
+        actualDrawDeck.clear();
+    }
+    for (int i = 0; i < drawDeck.size(); i++) {
+        //std::cout << drawDeck[i]->color << drawDeck[i]->number << std::endl;
+        actualDrawDeck.push_back(drawDeck[i]);
+    }
 }
 
 void placeStartCard(std::vector<Card*>& drawDeck, std::vector<Card*>& placeDeck) //Die Startkarte wird zufaellig bestimmt
@@ -882,7 +894,10 @@ void confirmNextPlayer(Player* player) // Erst zum naechsten Spieler wechseln, w
         }
         else
         {
-            std::cout << "Bitte gebe entweder y, s oder x ein." << std::endl;
+            clearScreen();
+            std::cout << "Bitte gebe entweder y, s oder x ein." << std::endl << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
     }
 
@@ -1591,7 +1606,7 @@ void saveGame(Player* player) //Auswahl von Spielstand auf welchem gespeichert w
     deleteSaveGame("./savegames/antiragequitsave.txt");
 }
 
-void writeSaveGame(int selection) 
+void writeSaveGame(int selection)
 {
     /*
         * Hier wird der aktuelle Spielstand gespeichert
@@ -1683,29 +1698,28 @@ void loadSaveGame() //Auswahl welcher Spielstand geladen werden soll
     std::string sg1 = "./savegames/savegame1.txt";
     std::string sg2 = "./savegames/savegame2.txt";
     std::string sg3 = "./savegames/savegame3.txt";
-
-    std::cout << "Waehle den gewuenschten Speicherstand aus." << std::endl;
-
-    if (fileEmpty(sg1))
-        std::cout << "[1]\t Speicherstand 1 [leer]" << std::endl;
-    else
-        std::cout << "[1]\t Speicherstand 1 [voll]" << std::endl;
-
-    if (fileEmpty(sg2))
-        std::cout << "[2]\t Speicherstand 2 [leer]" << std::endl;
-    else
-        std::cout << "[2]\t Speicherstand 2 [voll]" << std::endl;
-
-    if (fileEmpty(sg3))
-        std::cout << "[3]\t Speicherstand 3 [leer]" << std::endl;
-    else
-        std::cout << "[3]\t Speicherstand 3 [voll]" << std::endl;
-
-    std::cout << "[4]\t Spielstand loeschen" << std::endl;
-    std::cout << "[5]\t Zurueck zum Menue" << std::endl;
-
+    clearScreen();
     while (!correctInput)
     {
+        std::cout << "Waehle den gewuenschten Speicherstand aus." << std::endl;
+
+        if (fileEmpty(sg1))
+            std::cout << "[1]\t Speicherstand 1 [leer]" << std::endl;
+        else
+            std::cout << "[1]\t Speicherstand 1 [voll]" << std::endl;
+
+        if (fileEmpty(sg2))
+            std::cout << "[2]\t Speicherstand 2 [leer]" << std::endl;
+        else
+            std::cout << "[2]\t Speicherstand 2 [voll]" << std::endl;
+
+        if (fileEmpty(sg3))
+            std::cout << "[3]\t Speicherstand 3 [leer]" << std::endl;
+        else
+            std::cout << "[3]\t Speicherstand 3 [voll]" << std::endl;
+
+        std::cout << "[4]\t Spielstand loeschen" << std::endl;
+        std::cout << "[5]\t Zurueck zum Menue" << std::endl;
         std::cin >> selection;
         switch (selection)
         {
@@ -1717,10 +1731,10 @@ void loadSaveGame() //Auswahl welcher Spielstand geladen werden soll
             }
             else
             {
+                clearScreen();
                 std::cout << "==========================================" << std::endl
                     << "Spielstand leer. Waehle einen anderen aus." << std::endl
                     << "==========================================" << std::endl;
-                loadSaveGame();
             }
             break;
         case 2:
@@ -1731,10 +1745,10 @@ void loadSaveGame() //Auswahl welcher Spielstand geladen werden soll
             }
             else
             {
+                clearScreen();
                 std::cout << "==========================================" << std::endl
                     << "Spielstand leer. Waehle einen anderen aus." << std::endl
                     << "==========================================" << std::endl;
-                loadSaveGame();
             }
             break;
         case 3:
@@ -1745,10 +1759,10 @@ void loadSaveGame() //Auswahl welcher Spielstand geladen werden soll
             }
             else
             {
+                clearScreen();
                 std::cout << "==========================================" << std::endl
                     << "Spielstand leer. Waehle einen anderen aus." << std::endl
                     << "==========================================" << std::endl;
-                loadSaveGame();
             }
             break;
         case 4:
@@ -1761,8 +1775,10 @@ void loadSaveGame() //Auswahl welcher Spielstand geladen werden soll
             correctInput = true;
             break;
         default:
-            std::cout << "Couldn´t resolve action." << std::endl;
-            break;
+            clearScreen();
+            std::cout << "Bitte gebe eine gueltige Eingabe ein." << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
     }
 }
@@ -1990,48 +2006,58 @@ void deleteSelection() //Auswahl welcher Spielstand gelöscht werden soll
     std::string sg1 = "./savegames/savegame1.txt";
     std::string sg2 = "./savegames/savegame2.txt";
     std::string sg3 = "./savegames/savegame3.txt";
-
+    clearScreen();
     if (fileEmpty(sg1) && fileEmpty(sg2) && fileEmpty(sg3))
     {
         std::cout << "Alle Spielstaende sind bereits leer" << std::endl;
         backToMenu();
     }
     else {
-        std::cout << "Welcher Spielstand soll geloescht werden?" << std::endl;
+        bool correctinput = false;
+        while (!correctinput)
+        {
+            std::cout << "Welcher Spielstand soll geloescht werden?" << std::endl;
 
-        if (!fileEmpty(sg1))
-        {
-            std::cout << "[1]\t Speicherstand 1" << std::endl;
-            index++;
-        }
-        if (!fileEmpty(sg2))
-        {
-            std::cout << "[2]\t Speicherstand 2" << std::endl;
-            index++;
-        }
-        if (!fileEmpty(sg3))
-        {
-            std::cout << "[3]\t Speicherstand 3" << std::endl;
-        }
+            if (!fileEmpty(sg1))
+            {
+                std::cout << "[1]\t Speicherstand 1" << std::endl;
+                index++;
+            }
+            if (!fileEmpty(sg2))
+            {
+                std::cout << "[2]\t Speicherstand 2" << std::endl;
+                index++;
+            }
+            if (!fileEmpty(sg3))
+            {
+                std::cout << "[3]\t Speicherstand 3" << std::endl;
+            }
 
 
-        std::cin >> selection;
-        switch (selection)
-        {
-        case 1:
-            deleteSaveGame(sg1);
-            std::cout << "Spielstand 1 erfolgreich geloescht." << std::endl;
-            break;
-        case 2:
-            deleteSaveGame(sg2);
-            std::cout << "Spielstand 2 erfolgreich geloescht." << std::endl;
-            break;
-        case 3:
-            deleteSaveGame(sg3);
-            std::cout << "Spielstand 3 erfolgreich geloescht." << std::endl;
-            break;
-        default:
-            break;
+            std::cin >> selection;
+            switch (selection)
+            {
+            case 1:
+                deleteSaveGame(sg1);
+                std::cout << "Spielstand 1 erfolgreich geloescht." << std::endl;
+                correctinput = true;
+                break;
+            case 2:
+                deleteSaveGame(sg2);
+                std::cout << "Spielstand 2 erfolgreich geloescht." << std::endl;
+                correctinput = true;
+                break;
+            case 3:
+                deleteSaveGame(sg3);
+                std::cout << "Spielstand 3 erfolgreich geloescht." << std::endl;
+                correctinput = true;
+                break;
+            default:
+                std::cout << "Bitte gebe eine gueltige Eingabe ein." << std::endl;
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                clearScreen();
+            }
         }
         loadSaveGame();
     }
