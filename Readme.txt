@@ -6,7 +6,8 @@ Was ist enthalten?
   - UNO Spiellogik
   - Einzelspieler-Modus gegen maximal 3 Bots
   - Mehrspieler-Modus mit maximal 4 Spielern
-  - Runden während dem Spielen speichern
+  - Runden während dem Spielen speichern und diese im Menue laden
+  - Beenden während dem Spielen führt automatisch zum Speichern der aktuellen Runder
   - Punktesystem mit der Möglichkeit, die erreichten Punkte am Ende der Runde abzuspeichern
   - Abgespeicherte Punkte/Highscores anschauen
   - Seven-O-Regel de-/aktivieren
@@ -18,7 +19,8 @@ What is included?
   - UNO game logic
   - Singleplayer versus up to 3 Bots
   - Up to 4 players can play together in Multiplayer-Mode
-  - Save game within a round
+  - Save game while playing and load it in the menu
+  - Exiting while playing will automatically save the current game
   - Point System with the possibility to save scores at the end of a round
   - View high scores
   - De-/Activate the Seven-O-Rule
